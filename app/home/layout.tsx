@@ -14,7 +14,6 @@ export default function ProtectedLayout({
           <div className="w-full max-w-5xl flex justify-end items-center gap-5 p-3 px-5 text-sm">
             <Suspense>
               <AuthButton />
-              <ThemeSwitcher />
             </Suspense>
           </div>
         </nav>

@@ -1,8 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import Hello from "@/components/home/Hello";
 import RegisterPassKey from "@/components/passkey/RegisterPasskey";
 
 async function UserDetails() {
@@ -21,8 +18,6 @@ async function UserDetails() {
 export default function ProtectedPage() {
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
-      protected route
-      <Hello />
       <RegisterPassKey />
     </div>
   );
