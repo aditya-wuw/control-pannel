@@ -1,6 +1,9 @@
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Dashboard from "@/components/ui/Dashboard";
+import { Button } from "@/components/ui/button";
+import JournalForm from "@/components/Forms/Journal/JournalForm";
+import Toast from "@/components/Toast";
+import ProjectForm from "@/components/Forms/Projects/ProjectForm";
 
 async function getCountDetails() {
   const supabase = await createClient();
@@ -29,12 +32,19 @@ async function getCountDetails() {
 export default async function ProtectedPage() {
   const Counts = await getCountDetails();
   return (
-    <div className="flex-1 w-full flex flex-col gap-12 pt-4">
+    <div className="relative flex-1 w-full flex flex-col gap-12 pt-4">
+      <Toast />
       <Dashboard
         TotalProjects={Counts?.TotalProjects ?? 0}
         TotalJournals={Counts?.TotalJournals ?? 0}
         ContactPending={Counts?.TotalContacts ?? 0}
       />
+      <div className="w-full">
+        <JournalForm />
+      </div>
+      <div className="w-full">
+        <ProjectForm />
+      </div>
     </div>
   );
 }
