@@ -1,24 +1,40 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import RegisterPassKey from "@/components/passkey/RegisterPasskey";
+import Dashboard from "@/components/ui/Dashboard";
 
-async function UserDetails() {
+async function getCountDetails() {
   const supabase = await createClient();
-  const { data: claimsData, error: claimsError } =
-    await supabase.auth.getClaims();
+  try {
+    const { count: ProjectsCount } = await supabase
+      .from("personal_projects")
+      .select("*", { count: "exact", head: true });
+    const { count: JournalCount } = await supabase
+      .from("personal_blogs")
+      .select("*", { count: "exact", head: true });
+    const { count: ContactCount } = await supabase
+      .from("contact_queries")
+      .select("*", { count: "exact", head: true });
 
-  if (claimsError || !claimsData?.claims) {
-    redirect("/");
+    return {
+      TotalProjects: ProjectsCount,
+      TotalJournals: JournalCount,
+      TotalContacts: ContactCount,
+    };
+  } catch (e) {
+    console.log(`Failed to fetch counts : Error [${e}]`);
+    return null;
   }
-
-  const { data: userData } = await supabase.auth.getUser();
-  return JSON.stringify(claimsData.claims, null, 2);
 }
 
-export default function ProtectedPage() {
+export default async function ProtectedPage() {
+  const Counts = await getCountDetails();
   return (
-    <div className="flex-1 w-full flex flex-col gap-12">
-      <RegisterPassKey />
+    <div className="flex-1 w-full flex flex-col gap-12 pt-4">
+      <Dashboard
+        TotalProjects={Counts?.TotalProjects ?? 0}
+        TotalJournals={Counts?.TotalJournals ?? 0}
+        ContactPending={Counts?.TotalContacts ?? 0}
+      />
     </div>
   );
 }

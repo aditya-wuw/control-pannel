@@ -1,3 +1,4 @@
+import { BookCheck, ContactIcon, NotebookPen } from "lucide-react";
 import { Card } from "./card";
 
 interface dashboardProps {
@@ -6,25 +7,35 @@ interface dashboardProps {
   ContactPending: number;
 }
 
-export default function dashboard({
+export default function Dashboard({
   TotalProjects,
   TotalJournals,
   ContactPending,
 }: dashboardProps) {
+  const ICON_SIZE = 16;
   return (
-    <Card>
-      <Card>
-        <h1>Projects Published</h1>
-        <div>{TotalProjects}</div>
+    <div className="flex gap-2">
+      <Card className="xl:p-4 p-2">
+        <h1 className="flex items-center gap-2 xl:text-sm text-sm pb-2">
+          <BookCheck size={ICON_SIZE} />
+          Projects
+        </h1>
+        <div className="font-mono">{TotalProjects}</div>
       </Card>
-      <Card>
-        <h1>Journals Published</h1>
-        <div>{TotalProjects}</div>
+      <Card className="xl:p-4 p-2">
+        <h1 className="flex items-center gap-2 xl:text-sm text-sm pb-2">
+          <NotebookPen size={ICON_SIZE} />
+          Journals
+        </h1>
+        <div className="font-mono">{TotalJournals}</div>
       </Card>
-      <Card>
-        <h1>Pending Contact</h1>
-        <div>{TotalProjects}</div>
+      <Card className="xl:p-4 p-2">
+        <h1 className="flex items-center gap-2 xl:text-sm text-sm pb-2">
+          <ContactIcon size={ICON_SIZE} />
+          Contacts
+        </h1>
+        <div className="font-mono">{ContactPending}</div>
       </Card>
-    </Card>
+    </div>
   );
 }

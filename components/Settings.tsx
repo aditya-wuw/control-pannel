@@ -1,5 +1,5 @@
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { Settings2 } from "lucide-react";
+import { User } from "lucide-react";
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -8,17 +8,24 @@ import {
 } from "./ui/dropdown-menu";
 import { LogoutButton } from "./logout-button";
 import RegisterPassKey from "./passkey/RegisterPasskey";
-import { ThemeSwitcher } from "./theme-switcher";
 
-export default function Settings() {
+interface props {
+  user_name: string;
+}
+
+export default function Settings({ user_name }: props) {
   const ICON_SIZE = 16;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Settings2 key={"Settings"} size={ICON_SIZE} />
+        <User key={"Settings"} size={ICON_SIZE} />
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
-        <DropdownMenuContent sideOffset={16}>
+        <DropdownMenuContent>
+          <div className="px-2 py-1 text-sm">
+            <h1>こんにちは !</h1>
+            <h1 className="text-lg">{user_name}</h1>
+          </div>
           <DropdownMenuItem>
             <RegisterPassKey />
           </DropdownMenuItem>
