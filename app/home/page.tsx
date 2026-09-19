@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import JournalForm from "@/components/Forms/Journal/JournalForm";
 import Toast from "@/components/Toast";
 import ProjectForm from "@/components/Forms/Projects/ProjectForm";
+import { LayoutDashboard, Plus } from "lucide-react";
 
 async function getCountDetails() {
   const supabase = await createClient();
@@ -28,21 +29,27 @@ async function getCountDetails() {
     return null;
   }
 }
-
+const ICON_SIZE = 16;
 export default async function ProtectedPage() {
   const Counts = await getCountDetails();
   return (
-    <div className="relative flex-1 w-full flex flex-col gap-12 pt-4">
+    <div className="relative flex-1 w-full flex flex-col pt-4 px-4">
       <Toast />
+      <h1 className="mb-4 flex items-center gap-2">
+        <LayoutDashboard size={ICON_SIZE} />
+        Dashboard
+      </h1>
       <Dashboard
         TotalProjects={Counts?.TotalProjects ?? 0}
         TotalJournals={Counts?.TotalJournals ?? 0}
         ContactPending={Counts?.TotalContacts ?? 0}
       />
-      <div className="w-full">
+      <h1 className="mt-10 flex items-center gap-2">
+        <Plus size={ICON_SIZE} />
+        Create Somthing
+      </h1>
+      <div className="w-full flex gap-3 mt-5">
         <JournalForm />
-      </div>
-      <div className="w-full">
         <ProjectForm />
       </div>
     </div>

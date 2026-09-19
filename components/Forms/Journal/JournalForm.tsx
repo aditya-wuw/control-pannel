@@ -165,10 +165,10 @@ export default function JournalForm() {
             required
             defaultValue={state.values?.content}
             placeholder="write about your journal"
-            className="mt-2 h-100 outline-none border p-2 rounded resize-none"
+            className="mt-2 h-90 outline-none border p-2 rounded resize-none"
           />
         </Label>
-        <div className="flex flex-col gap-4 justify-end items-end h-full mt-5">
+        <div className="flex flex-col gap-4 justify-end items-end h-full">
           <Label htmlFor="isdraft">
             <select
               name="isdraft"
