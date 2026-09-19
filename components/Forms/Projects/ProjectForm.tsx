@@ -15,6 +15,7 @@ import {
 } from "react";
 import { FormState, ProjectFormAction } from "./ProjectFormAction";
 import { toast } from "sonner";
+import { ProjectSchemaError } from "@/types/SchemaErrorTypes";
 
 const InitialFormState: FormState = {
   success: false,
@@ -42,23 +43,18 @@ export default function ProjectForm() {
     }
   };
 
-  const handleSubmit = () => {
-    handleResetBannerPreview();
-    toast.success("Submited new journal");
-    setOpen(false);
-  };
-
   //reset the form
   useEffect(() => {
     if (state.success) {
-      toast.success("Submited new journal");
+      toast.success("New project added");
       setbannerPreview("");
       if (bannerInputRef.current) {
         bannerInputRef.current.value = "";
       }
+      // console.log("called the reset clean");
       setOpen(false);
     }
-  }, [state.success]);
+  }, [state]);
 
   if (!isOpen)
     return (
@@ -68,12 +64,11 @@ export default function ProjectForm() {
     );
   return (
     <Card className="absolute top-3 w-full h-fit p-5 pb-6">
-      <form
-        action={formAction}
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-5"
-      >
+      <form action={formAction} className="flex flex-col gap-5">
         <h1 className="font-mono">Add project details</h1>
+        {state.error && typeof state.message === "string" && (
+          <Card className="bg-red-400 p-3">{state.message}</Card>
+        )}
         <div className="lg:flex flex-row-reverse gap-5">
           <div>
             {bannerPreview ? (
@@ -95,7 +90,7 @@ export default function ProjectForm() {
               </div>
             ) : (
               <div className="border-4 p-2 border-dotted lg:w-80 h-full rounded-2xl flex-center">
-                <Label htmlFor="banner" className="flex gap-2">
+                <Label htmlFor="image" className="flex gap-2">
                   <ImagePlus />
                   Add an Image
                 </Label>
@@ -104,8 +99,8 @@ export default function ProjectForm() {
             <Input
               ref={bannerInputRef}
               type="file"
-              id="banner"
-              name="banner"
+              id="image"
+              name="image"
               accept="image/*"
               onChange={(e) => {
                 const file = e.currentTarget.files?.[0];
@@ -118,21 +113,33 @@ export default function ProjectForm() {
           </div>
           <div className="flex flex-col gap-4 lg:w-3/4 mt-4">
             <Label htmlFor="title">
-              Title
+              Title{" "}
+              {state.error && (
+                <span className="text-red-400 ml-2">
+                  {(state.message as ProjectSchemaError).title?.errors}
+                </span>
+              )}
               <Input
                 id="title"
                 name="title"
                 required
                 placeholder="Title of the project"
                 className="mt-2"
+                defaultValue={state.values?.title}
               />
             </Label>
             <Label htmlFor="Link">
-              page path
+              page path{" "}
+              {state.error && (
+                <span className="text-red-400 ml-2">
+                  {(state.message as ProjectSchemaError).Link?.errors}
+                </span>
+              )}
               <Input
                 id="Link"
                 name="Link"
                 required
+                defaultValue={state.values?.Link}
                 placeholder="custom path name for the project"
                 className="mt-2"
               />
@@ -140,71 +147,114 @@ export default function ProjectForm() {
           </div>
         </div>
         <Label htmlFor="Description">
-          Description
+          Description{" "}
+          {state.error && (
+            <span className="text-red-400 ml-2">
+              {(state.message as ProjectSchemaError).Description?.errors}
+            </span>
+          )}
           <Input
             id="Description"
             name="Description"
             required
+            defaultValue={state.values?.Description}
             placeholder="custom path name for the project"
             className="mt-2"
           />
         </Label>
         <Label htmlFor="AdditionalDescription">
-          Additional description
+          Additional description{" "}
+          {state.error && (
+            <span className="text-red-400 ml-2">
+              {
+                (state.message as ProjectSchemaError).AdditionalDescription
+                  ?.errors
+              }
+            </span>
+          )}
           <Input
             id="AdditionalDescription"
             name="AdditionalDescription"
+            defaultValue={state.values?.AdditionalDescription}
             placeholder="add some more details about (optional)"
             className="mt-2"
           />
         </Label>
-        <Label htmlFor="AdditionalDescription" className="w-2/4">
-          Tags
+        <Label htmlFor="AdditionalDescription" className="lg:w-2/4">
+          Tags{" "}
+          {state.error && (
+            <span className="text-red-400 ml-2">
+              {(state.message as ProjectSchemaError).tags?.errors}
+            </span>
+          )}
           <Input
             id="tags"
             name="tags"
             required
+            defaultValue={state.values?.tags}
             placeholder="add the tags with comma seperation e.g. ( eggs, tomato, chicken)"
             className="mt-2"
           />
         </Label>
-        <div className="flex justify-between gap-4">
+        <div className="flex lg:flex-row flex-col justify-between gap-4">
           <Label htmlFor="projectLiveUrl" className="w-full">
-            Live url
+            Live url{" "}
+            {state.error && (
+              <span className="text-red-400 ml-2">
+                {(state.message as ProjectSchemaError).projectLiveUrl?.errors}
+              </span>
+            )}
             <Input
               id="projectLiveUrl"
               name="projectLiveUrl"
-              required
-              placeholder="e.g. https://smgcat.site"
+              defaultValue={state.values?.projectLiveUrl}
+              placeholder="e.g. https://smgcat.site (optional)"
               className="mt-2"
             />
           </Label>
           <Label htmlFor="githubLink" className="w-full">
-            Github repo
+            Github repo{" "}
+            {state.error && (
+              <span className="text-red-400 ml-2">
+                {(state.message as ProjectSchemaError).githubLink?.errors}
+              </span>
+            )}
             <Input
               id="githubLink"
               name="githubLink"
-              required
-              placeholder="e.g. https://github.com/aditya-wuw/"
+              defaultValue={state.values?.githubLink}
+              placeholder="e.g. https://github.com/.... (optional)"
               className="mt-2"
             />
           </Label>
           <Label htmlFor="videoDemo" className="w-full">
-            Video demo
+            Video demo{" "}
+            {state.error && (
+              <span className="text-red-400 ml-2">
+                {(state.message as ProjectSchemaError).videoDemo?.errors}
+              </span>
+            )}
             <Input
               id="videoDemo"
               name="videoDemo"
+              defaultValue={state.values?.videoDemo}
               placeholder="add url of video demo (optional)"
               className="mt-2"
             />
           </Label>
         </div>
         <Label htmlFor="title" className="flex flex-col gap-3">
-          content
+          content{" "}
+          {state.error && (
+            <span className="text-red-400 ml-2">
+              {(state.message as ProjectSchemaError).content?.errors}
+            </span>
+          )}
           <textarea
             id="content"
             name="content"
             required
+            defaultValue={state.values?.content}
             placeholder="write about your journal"
             className="mt-2 h-100 outline-none border p-2 rounded resize-none"
           />

@@ -1,10 +1,11 @@
 "use server";
 
+import { submitForm } from "@/lib/supabase/submitForm";
 import { JournalSchema } from "@/lib/zod/JournalSchema";
 import { JournalSchemaError } from "@/types/SchemaErrorTypes";
 import z from "zod";
 
-type JournalType = z.infer<typeof JournalSchema>;
+export type JournalType = z.infer<typeof JournalSchema>;
 
 export interface FormState {
   success: boolean;
@@ -30,13 +31,22 @@ export const JournalFormAction = async (
     };
   }
   const ValidFormData = ValidatedForm.data;
+  const constructBannerPath = "store/" + (ValidFormData.image?.name ?? "");
+
   const Journal = {
     ...ValidFormData,
     isdraft: ValidFormData.isdraft === "Draft" ? true : false,
-    banner: ValidFormData.banner?.name ?? "",
+    image: constructBannerPath,
   };
 
-  console.log(Journal);
+  const saved = await submitForm("personal_blogs_drafts", Journal);
+  if (!saved.success)
+    return {
+      success: false,
+      error: true,
+      values: form as JournalType,
+      message: "Failed to save form data to database",
+    };
   const res = {
     success: true,
     error: false,

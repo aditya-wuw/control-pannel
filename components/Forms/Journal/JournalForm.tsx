@@ -53,7 +53,7 @@ export default function JournalForm() {
       }
       setOpen(false);
     }
-  }, [state.success]);
+  }, [state]);
 
   if (!isOpen)
     return (
@@ -66,6 +66,9 @@ export default function JournalForm() {
     <Card className="absolute top-3 w-full h-fit p-5 pb-6">
       <form action={formAction} className="flex flex-col gap-5">
         <h1 className="font-mono">Add journal details</h1>
+        {state.error && typeof state.message === "string" && (
+          <Card className="bg-red-400 p-2">{state.message}</Card>
+        )}
         <div className="lg:flex flex-row-reverse gap-5">
           <div>
             {bannerPreview ? (
@@ -87,7 +90,7 @@ export default function JournalForm() {
               </div>
             ) : (
               <div className="border-4 p-2 border-dotted lg:w-80 h-full rounded-2xl flex-center">
-                <Label htmlFor="banner" className="flex gap-2">
+                <Label htmlFor="image" className="flex gap-2">
                   <ImagePlus />
                   Add an Image
                 </Label>
@@ -96,8 +99,8 @@ export default function JournalForm() {
             <Input
               ref={bannerInputRef}
               type="file"
-              id="banner"
-              name="banner"
+              id="image"
+              name="image"
               accept="image/*"
               onChange={(e) => {
                 const file = e.currentTarget.files?.[0];
@@ -125,21 +128,21 @@ export default function JournalForm() {
                 className="mt-2"
               />
             </Label>
-            <Label htmlFor="shortDescription">
+            <Label htmlFor="AdditionalDescription">
               Abouts{" "}
               {state.error && (
                 <span className="text-red-400 ml-2">
                   {
-                    (state.message as JournalSchemaError).shortDescription
+                    (state.message as JournalSchemaError).AdditionalDescription
                       ?.errors
                   }
                 </span>
               )}
               <Input
-                id="shortDescription"
-                name="shortDescription"
+                id="AdditionalDescription"
+                name="AdditionalDescription"
                 required
-                defaultValue={state.values?.shortDescription}
+                defaultValue={state.values?.AdditionalDescription}
                 placeholder="A short brief about the journal"
                 className="mt-2"
               />
