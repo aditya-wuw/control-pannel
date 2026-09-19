@@ -61,6 +61,7 @@ export default function JournalForm() {
         Create new Journal
       </Button>
     );
+
   return (
     <Card className="absolute top-3 w-full h-fit p-5 pb-6">
       <form action={formAction} className="flex flex-col gap-5">

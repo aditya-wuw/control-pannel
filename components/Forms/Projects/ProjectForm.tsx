@@ -48,9 +48,17 @@ export default function ProjectForm() {
     setOpen(false);
   };
 
+  //reset the form
   useEffect(() => {
-    console.log(bannerPreview);
-  }, [bannerPreview]);
+    if (state.success) {
+      toast.success("Submited new journal");
+      setbannerPreview("");
+      if (bannerInputRef.current) {
+        bannerInputRef.current.value = "";
+      }
+      setOpen(false);
+    }
+  }, [state.success]);
 
   if (!isOpen)
     return (
