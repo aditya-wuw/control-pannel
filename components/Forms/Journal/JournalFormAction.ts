@@ -1,28 +1,47 @@
 "use server";
 
+import { JournalSchema } from "@/lib/zod/JournalSchema";
+import { JournalSchemaError } from "@/types/SchemaErrorTypes";
+import z from "zod";
+
+type JournalType = z.infer<typeof JournalSchema>;
+
 export interface FormState {
   success: boolean;
   error: boolean;
-  message: string;
+  values?: JournalType;
+  message: string | JournalSchemaError | undefined;
 }
 
 export const JournalFormAction = async (
-  prevState: FormState,
+  _prevState: FormState,
   FormData: FormData,
 ): Promise<FormState> => {
-  try {
-    console.log(Object.fromEntries(FormData.entries()));
-    const res: FormState = {
-      success: true,
-      error: false,
-      message: "dadasdasdasghadasgh",
-    };
-    return res;
-  } catch (error) {
+  const form = Object.fromEntries(FormData.entries());
+  const ValidatedForm = JournalSchema.safeParse(form);
+  if (!ValidatedForm.success) {
+    const errors = z.treeifyError(ValidatedForm.error);
+    console.log("Not validated");
     return {
       success: false,
       error: true,
-      message: "An unexpected error occurred.",
+      values: form as JournalType,
+      message: errors.properties as JournalSchemaError,
     };
   }
+  const ValidFormData = ValidatedForm.data;
+  const Journal = {
+    ...ValidFormData,
+    isdraft: ValidFormData.isdraft === "Draft" ? true : false,
+    banner: ValidFormData.banner?.name ?? "",
+  };
+
+  console.log(Journal);
+  const res = {
+    success: true,
+    error: false,
+    values: undefined,
+    message: "Form Submited",
+  };
+  return res;
 };

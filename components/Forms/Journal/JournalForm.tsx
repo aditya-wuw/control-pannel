@@ -15,6 +15,7 @@ import {
 } from "react";
 import { FormState, JournalFormAction } from "./JournalFormAction";
 import { toast } from "sonner";
+import { JournalSchemaError } from "@/types/SchemaErrorTypes";
 
 const InitialFormState: FormState = {
   success: false,
@@ -42,15 +43,17 @@ export default function JournalForm() {
     }
   };
 
-  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
-    handleResetBannerPreview();
-    toast.success("Submited new journal");
-    setOpen(false);
-  };
-
+  //reset the form
   useEffect(() => {
-    console.log(bannerPreview);
-  }, [bannerPreview]);
+    if (state.success) {
+      toast.success("Submited new journal");
+      setbannerPreview("");
+      if (bannerInputRef.current) {
+        bannerInputRef.current.value = "";
+      }
+      setOpen(false);
+    }
+  }, [state.success]);
 
   if (!isOpen)
     return (
@@ -60,11 +63,7 @@ export default function JournalForm() {
     );
   return (
     <Card className="absolute top-3 w-full h-fit p-5 pb-6">
-      <form
-        action={formAction}
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-5"
-      >
+      <form action={formAction} className="flex flex-col gap-5">
         <h1 className="font-mono">Add journal details</h1>
         <div className="lg:flex flex-row-reverse gap-5">
           <div>
@@ -110,21 +109,36 @@ export default function JournalForm() {
           </div>
           <div className="flex flex-col gap-4 lg:w-3/4 mt-4">
             <Label htmlFor="title">
-              Title
+              Title{" "}
+              {state.error && (
+                <span className="text-red-400 ml-2">
+                  {(state.message as JournalSchemaError).title?.errors}
+                </span>
+              )}
               <Input
                 id="title"
                 name="title"
                 required
+                defaultValue={state.values?.title}
                 placeholder="Today I created this ...."
                 className="mt-2"
               />
             </Label>
             <Label htmlFor="shortDescription">
-              Abouts
+              Abouts{" "}
+              {state.error && (
+                <span className="text-red-400 ml-2">
+                  {
+                    (state.message as JournalSchemaError).shortDescription
+                      ?.errors
+                  }
+                </span>
+              )}
               <Input
                 id="shortDescription"
                 name="shortDescription"
                 required
+                defaultValue={state.values?.shortDescription}
                 placeholder="A short brief about the journal"
                 className="mt-2"
               />
@@ -133,11 +147,19 @@ export default function JournalForm() {
         </div>
 
         <Label htmlFor="title" className="flex flex-col gap-3">
-          content
+          <h1>
+            content{" "}
+            {state.error && (
+              <span className="text-red-400 ml-2">
+                {(state.message as JournalSchemaError).content?.errors}
+              </span>
+            )}
+          </h1>
           <textarea
             id="content"
             name="content"
             required
+            defaultValue={state.values?.content}
             placeholder="write about your journal"
             className="mt-2 h-100 outline-none border p-2 rounded resize-none"
           />
@@ -167,7 +189,7 @@ export default function JournalForm() {
               disabled={isPending}
               className="hover:opacity-100 opacity-80"
             >
-              <Check /> Submit
+              <Check /> Save
             </Button>
           </div>
         </div>
