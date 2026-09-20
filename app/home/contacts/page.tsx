@@ -1,6 +1,5 @@
 import Contacts from "@/components/Pages/Contacts";
 import { selectAll } from "@/lib/supabase/Actions/getData";
-import { ContactsQuery } from "@/types/database";
 import { toast } from "sonner";
 
 export default async function page() {

@@ -11,7 +11,8 @@ export async function AuthButton() {
   // You can also use getUser() which will be slower.
   const { data } = await supabase.auth.getUser();
   const user_id = data?.user?.id;
-  const { data: userName, error } = await supabase
+  if (!user_id) return;
+  const { data: userName } = await supabase
     .from("users")
     .select("full_name")
     .eq("id", user_id)
@@ -20,7 +21,9 @@ export async function AuthButton() {
   return user_id ? (
     <div className="flex items-center gap-4">
       <ThemeSwitcher />
-      <Settings user_name={userName?.full_name} />
+      {userName && userName.full_name && (
+        <Settings user_name={userName.full_name} />
+      )}
     </div>
   ) : (
     <div className="flex gap-2">

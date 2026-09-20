@@ -6,7 +6,7 @@ import { getFormatedDate } from "@/lib/utils/getFormatedDates";
 import { Button } from "../ui/button";
 import { useActionState, useState, useTransition } from "react";
 import { UpdateContactAction } from "./Actions/UpdateContactStatus";
-import { filters, origin, status } from "@/types/ContactsPage";
+import { filters, origin, status } from "@/types/Pages/ContactsPage";
 import { toast } from "sonner";
 import Toast from "../Toast";
 import { useRouter } from "next/navigation";

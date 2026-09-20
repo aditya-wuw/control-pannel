@@ -7,11 +7,13 @@ export const selectAll = async <T extends TablesTypes>(
 ): Promise<ErrorPromiose | Tables<T>[]> => {
   const supabase = await createClient();
   const { data, error } = await supabase.from(table).select("*");
-  if (error)
+  if (error) {
+    console.error(error);
     return {
       success: false,
       message: error.message,
     };
+  }
   if (!data || data.length === 0)
     return {
       success: false,

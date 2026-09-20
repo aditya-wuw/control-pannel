@@ -32,7 +32,9 @@ export const ProjectFormAction = async (
   }
   const ValidFormData = ValidatedForm.data;
   const constructImagePath = "store/" + (ValidFormData.image?.name ?? "");
-  const { githubLink, projectLiveUrl, videoDemo, ...cleanData } = ValidFormData;
+  const { githubLink, projectLiveUrl, videoDemo, isdraft, ...cleanData } =
+    ValidFormData;
+
   const Projects = {
     ...cleanData,
     tags: ValidFormData.tags.split(","),
@@ -47,11 +49,14 @@ export const ProjectFormAction = async (
       },
     ],
     DemoVideo: videoDemo,
-    isdraft: ValidFormData.isdraft === "Draft" ? true : false,
     image: constructImagePath,
   };
 
-  const saved = await submitForm("personal_projects_drafts", Projects);
+  const saved = await submitForm(
+    isdraft === "Draft" ? "personal_projects_drafts" : "personal_projects",
+    Projects,
+  );
+
   if (!saved.success)
     return {
       success: false,

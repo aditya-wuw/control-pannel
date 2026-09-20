@@ -1,27 +1,27 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { status } from "@/types/Pages/ContactsPage";
 
 export type FormState = {
   success: boolean;
   message: string;
 };
 
-export const UpdateContactAction = async (
+export const UpdatePublishAction = async (
   id: string,
-  status: status,
+  isDraft: boolean,
 ): Promise<FormState> => {
-  if (!id || !status)
+  if (!id)
     return {
       success: false,
       message: "Failed to update contact status",
     };
   const supabase = await createClient();
   const { error } = await supabase
-    .from("contact_queries")
-    .update({ status: status })
+    .from("personal_blogs_drafts")
+    .update({ isdraft: isDraft })
     .eq("id", id);
+
   if (error)
     return {
       success: false,
@@ -29,6 +29,6 @@ export const UpdateContactAction = async (
     };
   return {
     success: true,
-    message: `updated contact status to ${status}`,
+    message: isDraft ? `Saved as draft` : `Journal published`,
   };
 };

@@ -5,12 +5,12 @@ import { JournalSchema } from "@/lib/zod/JournalSchema";
 import { JournalSchemaError } from "@/types/SchemaErrorTypes";
 import z from "zod";
 
-export type JournalType = z.infer<typeof JournalSchema>;
+export type JournalInputType = z.infer<typeof JournalSchema>;
 
 export interface FormState {
   success: boolean;
   error: boolean;
-  values?: JournalType;
+  values?: JournalInputType;
   message: string | JournalSchemaError | undefined;
 }
 
@@ -26,25 +26,28 @@ export const JournalFormAction = async (
     return {
       success: false,
       error: true,
-      values: form as JournalType,
+      values: form as JournalInputType,
       message: errors.properties as JournalSchemaError,
     };
   }
   const ValidFormData = ValidatedForm.data;
-  const constructBannerPath = "store/" + (ValidFormData.image?.name ?? "");
+  const constructBannerPath = "store/" + (ValidFormData.banner?.name ?? "");
 
+  const { isdraft, ...cleanData } = ValidFormData;
   const Journal = {
-    ...ValidFormData,
-    isdraft: ValidFormData.isdraft === "Draft" ? true : false,
-    image: constructBannerPath,
+    ...cleanData,
+    banner: constructBannerPath,
   };
 
-  const saved = await submitForm("personal_blogs_drafts", Journal);
+  const saved = await submitForm(
+    isdraft === "Draft" ? "personal_blogs_drafts" : "personal_blogs",
+    Journal,
+  );
   if (!saved.success)
     return {
       success: false,
       error: true,
-      values: form as JournalType,
+      values: form as JournalInputType,
       message: "Failed to save form data to database",
     };
   const res = {

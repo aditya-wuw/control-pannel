@@ -130,21 +130,21 @@ export default function JournalForm() {
                 className="mt-2"
               />
             </Label>
-            <Label htmlFor="AdditionalDescription">
+            <Label htmlFor="shortDescription">
               Abouts{" "}
               {state.error && (
                 <span className="text-red-400 ml-2">
                   {
-                    (state.message as JournalSchemaError).AdditionalDescription
+                    (state.message as JournalSchemaError).shortDescription
                       ?.errors
                   }
                 </span>
               )}
               <Input
-                id="AdditionalDescription"
-                name="AdditionalDescription"
+                id="shortDescription"
+                name="shortDescription"
                 required
-                defaultValue={state.values?.AdditionalDescription}
+                defaultValue={state.values?.shortDescription}
                 placeholder="A short brief about the journal"
                 className="mt-2"
               />

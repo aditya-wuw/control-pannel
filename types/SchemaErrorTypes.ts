@@ -4,7 +4,7 @@ export interface JournalSchemaError {
         errors: string[];
       }
     | undefined;
-  AdditionalDescription?:
+  shortDescription?:
     | {
         errors: string[];
       }
