@@ -6,31 +6,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Check, ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
-import {
-  SubmitEvent,
-  useActionState,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { FormState, JournalFormAction } from "./JournalFormAction";
 import { toast } from "sonner";
 import { JournalSchemaError } from "@/types/SchemaErrorTypes";
 import Toast from "@/components/Toast";
+import { JournalType } from "@/types/database";
+
+interface props {
+  buttonTitle?: string;
+  id?: string;
+  FormState?: FormState;
+}
 
 const InitialFormState: FormState = {
   success: false,
   error: false,
+  values: undefined,
   message: "",
 };
 
-export default function JournalForm() {
+export default function JournalForm({ buttonTitle, FormState, id }: props) {
   const [isOpen, setOpen] = useState(false);
   const [bannerPreview, setbannerPreview] = useState("");
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const [state, formAction, isPending] = useActionState(
     JournalFormAction,
-    InitialFormState,
+    FormState ?? InitialFormState,
   );
 
   const handleCancel = () => {
@@ -59,7 +61,7 @@ export default function JournalForm() {
   if (!isOpen)
     return (
       <Button className="w-fit" onClick={() => setOpen(true)}>
-        Create new Journal
+        {buttonTitle ?? "Create new Journal"}
       </Button>
     );
 
@@ -130,6 +132,17 @@ export default function JournalForm() {
                 className="mt-2"
               />
             </Label>
+            {id && (
+              <Label htmlFor="id" className="hidden">
+                <Input
+                  id="id"
+                  name="id"
+                  defaultValue={id}
+                  placeholder="Today I created this ...."
+                  className="mt-2"
+                />
+              </Label>
+            )}
             <Label htmlFor="shortDescription">
               Abouts{" "}
               {state.error && (

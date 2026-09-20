@@ -8,6 +8,8 @@ import { useState, useTransition } from "react";
 import { Card } from "../ui/card";
 import { toast } from "sonner";
 import { UpdatePublishAction } from "./Actions/UpdatePublishStatus";
+import { useRouter } from "next/navigation";
+import JournalForm from "../Forms/Journal/JournalForm";
 
 interface JournalProps {
   Journals: JournalType[];
@@ -16,6 +18,7 @@ interface JournalProps {
 const filterOptions: filters[] = ["all", "Public", "Drafts"];
 const publishOptions = ["Public", "Drafts"];
 export default function Journal({ Journals }: JournalProps) {
+  const router = useRouter();
   const [JournalsState, setJournals] = useState(Journals);
   const [pending, startTransition] = useTransition();
   const [ShowJournalsbyFilter, setShowJournalsbyFilter] =
@@ -28,6 +31,7 @@ export default function Journal({ Journals }: JournalProps) {
         toast.error(update.message);
       }
       toast.success(update.message);
+      router.refresh();
     });
   };
 
@@ -42,7 +46,7 @@ export default function Journal({ Journals }: JournalProps) {
         setJournals(Public);
         break;
       case "Drafts":
-        const Final = Journals.filter((i) => i.isdraft === false);
+        const Final = Journals.filter((i) => i.isdraft === true);
         setJournals(Final);
         break;
       default:
@@ -52,36 +56,59 @@ export default function Journal({ Journals }: JournalProps) {
   };
 
   return (
-    <div className="mt-5 px-4">
+    <div className="relative inset-0 mt-5 px-4 bg-red-500">
       <Toast />
+
       <div className="text-xl w-full flex justify-between gap-35 items-center">
         <h1 className="flex items-center gap-2">
           <Notebook size={20} />
           Journals
         </h1>
-        <Button className="w-fit">
-          <select
-            onChange={(e) => handleFilter(e.currentTarget.value as filters)}
-            defaultValue={ShowJournalsbyFilter}
-            className="w-fit outline-none"
-          >
-            {filterOptions.map((i) => (
-              <option key={i}>{i}</option>
-            ))}
-          </select>
-        </Button>
+        <div className="flex gap-2">
+          <Button className="w-fit">
+            <select
+              onChange={(e) => handleFilter(e.currentTarget.value as filters)}
+              defaultValue={ShowJournalsbyFilter}
+              className="w-fit outline-none"
+            >
+              {filterOptions.map((i) => (
+                <option key={i}>{i}</option>
+              ))}
+            </select>
+          </Button>
+        </div>
       </div>
-      <div className="w-full mt-5">
-        {JournalsState.length > 0 ? (
+      <div className="w-full mt-5 flex flex-col gap-5">
+        {JournalsState.length === 0 ? (
+          <h1 className="flex-center mt-10 opacity-70">
+            no Journals available
+          </h1>
+        ) : (
           JournalsState.map((i) => (
             <Card className="w-full p-4" key={i.id}>
               <div>
                 <h1>{i.title}</h1>
               </div>
-              <div>
+              <div className="flex justify-end gap-2">
+                {
+                  <JournalForm
+                    buttonTitle={"Update"}
+                    FormState={{
+                      success: false,
+                      error: false,
+                      message: "",
+                      values: {
+                        title: i.title,
+                        content: i.content,
+                        shortDescription: i.shortDescription,
+                        banner: i.banner ?? "",
+                      },
+                    }}
+                  />
+                }
                 <Button>
                   <select
-                    defaultValue={i.isdraft ? "Draft" : "Public"}
+                    defaultValue={i.isdraft ? "Drafts" : "Public"}
                     onChange={(e) =>
                       handleStatusUpdate(
                         i.id,
@@ -99,10 +126,6 @@ export default function Journal({ Journals }: JournalProps) {
               </div>
             </Card>
           ))
-        ) : (
-          <h1 className="flex-center mt-10 opacity-70">
-            no Journals available
-          </h1>
         )}
       </div>
     </div>

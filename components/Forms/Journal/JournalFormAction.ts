@@ -31,18 +31,21 @@ export const JournalFormAction = async (
     };
   }
   const ValidFormData = ValidatedForm.data;
-  const constructBannerPath = "store/" + (ValidFormData.banner?.name ?? "");
-
+  let constructBannerPath = "";
+  if (ValidFormData.banner instanceof File) {
+    constructBannerPath = "store/" + (ValidFormData.banner?.name ?? "");
+  }
+  constructBannerPath = ValidFormData.banner as string;
   const { isdraft, ...cleanData } = ValidFormData;
   const Journal = {
     ...cleanData,
     banner: constructBannerPath,
   };
-
   const saved = await submitForm(
     isdraft === "Draft" ? "personal_blogs_drafts" : "personal_blogs",
     Journal,
   );
+
   if (!saved.success)
     return {
       success: false,
@@ -50,11 +53,13 @@ export const JournalFormAction = async (
       values: form as JournalInputType,
       message: "Failed to save form data to database",
     };
+
   const res = {
     success: true,
     error: false,
     values: undefined,
     message: "Form Submited",
   };
+
   return res;
 };

@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 export const JournalSchema = z.object({
+  id: z.string().optional(),
   title: z
     .string()
     .nonempty()
@@ -16,6 +17,6 @@ export const JournalSchema = z.object({
     .nonempty()
     .min(100, { error: "must be a minimum of 100 characters" })
     .max(2000, { error: "must be a with in 2000 characters" }),
-  banner: z.file().optional(),
+  banner: z.file().or(z.string()).optional(),
   isdraft: z.string().optional(),
 });
