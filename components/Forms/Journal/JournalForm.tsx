@@ -16,6 +16,7 @@ import {
 import { FormState, JournalFormAction } from "./JournalFormAction";
 import { toast } from "sonner";
 import { JournalSchemaError } from "@/types/SchemaErrorTypes";
+import Toast from "@/components/Toast";
 
 const InitialFormState: FormState = {
   success: false,
@@ -64,6 +65,7 @@ export default function JournalForm() {
 
   return (
     <Card className="absolute top-3 w-full h-fit p-5 pb-6">
+      <Toast />
       <form action={formAction} className="flex flex-col gap-5">
         <h1 className="font-mono">Add journal details</h1>
         {state.error && typeof state.message === "string" && (

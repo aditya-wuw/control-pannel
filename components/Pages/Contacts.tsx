@@ -4,20 +4,44 @@ import { Card } from "../ui/card";
 import { Contact, Mail, User } from "lucide-react";
 import { getFormatedDate } from "@/lib/utils/getFormatedDates";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useActionState, useState, useTransition } from "react";
+import { UpdateContactAction } from "./Actions/UpdateContactStatus";
+import { filters, origin, status } from "@/types/ContactsPage";
+import { toast } from "sonner";
+import Toast from "../Toast";
+import { useRouter } from "next/navigation";
 
 interface ContactsProps {
   Contacts: ContactsQuery[];
 }
-type origin = "adi" | "smug" | "all";
-type status = "pending" | "contacted" | "ignore";
+
 const statusOptions: status[] = ["pending", "contacted", "ignore"];
-const filterOptions: origin[] = ["all", "adi", "smug"];
+const filterOptions: filters[] = ["all", "adi", "smug", ...statusOptions];
 
 export default function Contacts({ Contacts }: ContactsProps) {
   const ICON_SIZE = 16;
+  const router = useRouter();
+  const [ContactsState, setContacts] = useState(Contacts);
+  const [pending, startTransition] = useTransition();
 
-  const handleUpdateState = (id: string) => {};
+  const handleStatusUpdate = async (id: string, status: status) => {
+    startTransition(async () => {
+      const state = await UpdateContactAction(id, status);
+      if (!state.success) toast.error(state.message);
+      toast.success(state.message);
+      router.refresh();
+    });
+  };
+
+  const handleFilter = (target: filters) => {
+    if (target === "all") return setContacts(Contacts);
+    if (statusOptions.includes(target as status)) {
+      const Targets = Contacts.filter((item) => item.status === target);
+      return setContacts(Targets);
+    }
+    const Targets = Contacts.filter((item) => item.origin === target);
+    setContacts(Targets);
+  };
 
   if (Contacts.length === 0 || !Contacts)
     return (
@@ -26,6 +50,7 @@ export default function Contacts({ Contacts }: ContactsProps) {
 
   return (
     <div className="mt-5 px-4">
+      <Toast />
       <div className="text-xl flex justify-between gap-2 items-center">
         <h1 className="flex items-center gap-2">
           <Contact size={20} />
@@ -33,6 +58,7 @@ export default function Contacts({ Contacts }: ContactsProps) {
         </h1>
         <Button>
           <select
+            onChange={(e) => handleFilter(e.currentTarget.value as origin)}
             defaultValue={filterOptions[0]}
             className="w-fit outline-none"
           >
@@ -43,7 +69,7 @@ export default function Contacts({ Contacts }: ContactsProps) {
         </Button>
       </div>
       <div className="mt-5 flex flex-col gap-3">
-        {Contacts.sort((a, b) => {
+        {ContactsState.sort((a, b) => {
           if (a.created_at && b.created_at)
             return (
               new Date(b.created_at).getTime() -
@@ -68,6 +94,9 @@ export default function Contacts({ Contacts }: ContactsProps) {
                       {i.email}
                     </a>
                   </h3>
+                  <h3 className="flex items-center gap-2 opacity-60">
+                    origin - {i.origin}
+                  </h3>
                 </div>
                 {i.created_at && (
                   <h1 className="max-md:text-xs">
@@ -76,11 +105,22 @@ export default function Contacts({ Contacts }: ContactsProps) {
                 )}
               </div>
               <p className="lg:mt-2 mt-3 max-md:text-sm">{i.message}</p>
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-2">
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(i.email);
+                    toast.success(`copied ${i.email}`);
+                  }}
+                >
+                  Contact
+                </Button>
                 <Button>
                   <select
                     defaultValue={i.status as string}
-                    onChange={() => handleUpdateState(i.id)}
+                    onChange={(e) =>
+                      handleStatusUpdate(i.id, e.currentTarget.value as status)
+                    }
+                    disabled={pending}
                     className="w-fit outline-none"
                   >
                     {statusOptions.map((i) => (
