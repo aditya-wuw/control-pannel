@@ -1,6 +1,6 @@
 "use server";
 
-import { submitForm } from "@/lib/supabase/submitForm";
+import { submitForm } from "@/lib/supabase/Actions/submitForm";
 import { ProjectSchema } from "@/lib/zod/ProjectSchema";
 import { ProjectSchemaError } from "@/types/SchemaErrorTypes";
 import z from "zod";
