@@ -1,5 +1,5 @@
 import { AuthButton } from "@/components/auth-button";
-import { ThemeSwitcher } from "@/components/theme-switcher";
+import Toast from "@/components/Toast";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -19,7 +19,8 @@ export default function ProtectedLayout({
             </Suspense>
           </div>
         </nav>
-        <div className="flex-1 flex flex-col gap-5 max-w-5xl xl:w-5xl">
+        <Toast />
+        <div className="relative flex-1 flex flex-col gap-5 max-w-5xl xl:w-5xl">
           {children}
         </div>
       </div>

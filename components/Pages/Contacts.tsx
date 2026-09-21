@@ -50,7 +50,6 @@ export default function Contacts({ Contacts }: ContactsProps) {
 
   return (
     <div className="mt-5 px-4">
-      <Toast />
       <div className="text-xl flex justify-between gap-2 items-center">
         <h1 className="flex items-center gap-2">
           <Contact size={20} />

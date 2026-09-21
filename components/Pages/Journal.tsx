@@ -1,10 +1,9 @@
 "use client";
 import { JournalDraftsType, JournalType } from "@/types/database";
-import Toast from "../Toast";
 import { Notebook } from "lucide-react";
 import { Button } from "../ui/button";
 import { filters } from "@/types/Pages/JournalPage";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Card } from "../ui/card";
 import { toast } from "sonner";
 import { UpdatePublishAction } from "./Actions/UpdatePublishStatus";
@@ -19,6 +18,7 @@ const filterOptions: filters[] = ["all", "Public", "Drafts"];
 const publishOptions = ["Public", "Drafts"];
 export default function Journal({ Journals }: JournalProps) {
   const router = useRouter();
+  const [ActionSuccess, setActionSuccess] = useState(false);
   const [JournalsState, setJournals] = useState(Journals);
   const [pending, startTransition] = useTransition();
   const [ShowJournalsbyFilter, setShowJournalsbyFilter] =
@@ -34,6 +34,13 @@ export default function Journal({ Journals }: JournalProps) {
       router.refresh();
     });
   };
+
+  useEffect(() => {
+    if (ActionSuccess) {
+      router.refresh();
+      console.log("Refershing");
+    }
+  }, [ActionSuccess]);
 
   const handleFilter = (target: filters) => {
     setShowJournalsbyFilter(target);
@@ -56,10 +63,8 @@ export default function Journal({ Journals }: JournalProps) {
   };
 
   return (
-    <div className="relative inset-0 mt-5 px-4 bg-red-500">
-      <Toast />
-
-      <div className="text-xl w-full flex justify-between gap-35 items-center">
+    <div className="mt-5 px-4">
+      <div className="text-xl flex justify-between items-center">
         <h1 className="flex items-center gap-2">
           <Notebook size={20} />
           Journals
@@ -76,6 +81,7 @@ export default function Journal({ Journals }: JournalProps) {
               ))}
             </select>
           </Button>
+          <JournalForm />
         </div>
       </div>
       <div className="w-full mt-5 flex flex-col gap-5">
@@ -93,6 +99,7 @@ export default function Journal({ Journals }: JournalProps) {
                 {
                   <JournalForm
                     buttonTitle={"Update"}
+                    id={i.id}
                     FormState={{
                       success: false,
                       error: false,

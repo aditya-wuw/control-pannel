@@ -18,5 +18,5 @@ export const JournalSchema = z.object({
     .min(100, { error: "must be a minimum of 100 characters" })
     .max(2000, { error: "must be a with in 2000 characters" }),
   banner: z.file().or(z.string()).optional(),
-  isdraft: z.string().optional(),
+  isdraft: z.string().or(z.boolean()).optional(),
 });

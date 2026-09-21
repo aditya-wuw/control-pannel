@@ -46,6 +46,6 @@ export const JournalUpdateAction = async (
     .eq("id", id);
 
   if (error) return FormStateBuilder(false, true, error.message);
-  revalidatePath("/home/journals",'layout');
+  revalidatePath("/home/journals", "layout");
   return FormStateBuilder(true, false, "Journal updated");
 };

@@ -1,5 +1,5 @@
 import { BookCheck, ContactIcon, NotebookPen } from "lucide-react";
-import { Card } from "./card";
+import { Card } from "./ui/card";
 import Link from "next/link";
 
 interface dashboardProps {
