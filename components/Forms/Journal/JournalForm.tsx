@@ -85,7 +85,7 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
     );
 
   return (
-    <div className="fixed inset-0 dark:bg-black/50 backdrop-blur-[2px]">
+    <div className="fixed z-100 inset-0 dark:bg-black/50 backdrop-blur-[2px]">
       <Card className="fixed inset-0  mx-auto my-auto xl:w-1/2 w-full h-[90%] p-5 pb-6 overflow-y-auto">
         <Toast />
         <form

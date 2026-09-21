@@ -153,6 +153,7 @@ export type Database = {
           ended: string | null
           id: string
           image: string | null
+          isdraft: boolean | null
           Link: string | null
           links: Json | null
           orderIndex: number
@@ -169,6 +170,7 @@ export type Database = {
           ended?: string | null
           id?: string
           image?: string | null
+          isdraft?: boolean | null
           Link?: string | null
           links?: Json | null
           orderIndex?: number
@@ -185,6 +187,7 @@ export type Database = {
           ended?: string | null
           id?: string
           image?: string | null
+          isdraft?: boolean | null
           Link?: string | null
           links?: Json | null
           orderIndex?: number
@@ -204,6 +207,7 @@ export type Database = {
           ended: string | null
           id: string
           image: string | null
+          isdraft: boolean | null
           Link: string | null
           links: Json | null
           orderIndex: number
@@ -220,6 +224,7 @@ export type Database = {
           ended?: string | null
           id?: string
           image?: string | null
+          isdraft?: boolean | null
           Link?: string | null
           links?: Json | null
           orderIndex?: number
@@ -236,6 +241,7 @@ export type Database = {
           ended?: string | null
           id?: string
           image?: string | null
+          isdraft?: boolean | null
           Link?: string | null
           links?: Json | null
           orderIndex?: number

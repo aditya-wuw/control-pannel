@@ -2,19 +2,19 @@
 import { JournalDraftsType, JournalType } from "@/types/database";
 import { Notebook } from "lucide-react";
 import { Button } from "../ui/button";
-import { filters } from "@/types/Pages/JournalPage";
 import { useEffect, useState, useTransition } from "react";
 import { Card } from "../ui/card";
 import { toast } from "sonner";
-import { UpdatePublishAction } from "./Actions/UpdatePublishStatus";
+import { UpdatePublishAction } from "./Actions/Journals/UpdatePublishStatus";
 import { useRouter } from "next/navigation";
 import JournalForm from "../Forms/Journal/JournalForm";
+import { Draftfilters } from "@/types/PageTypes";
 
 interface JournalProps {
   Journals: JournalType[];
 }
 
-const filterOptions: filters[] = ["all", "Public", "Drafts"];
+const filterOptions: Draftfilters[] = ["all", "Public", "Drafts"];
 const publishOptions = ["Public", "Drafts"];
 export default function Journal({ Journals }: JournalProps) {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function Journal({ Journals }: JournalProps) {
   const [JournalsState, setJournals] = useState(Journals);
   const [pending, startTransition] = useTransition();
   const [ShowJournalsbyFilter, setShowJournalsbyFilter] =
-    useState<filters>("all");
+    useState<Draftfilters>("all");
 
   const handleStatusUpdate = (id: string, isDraft: boolean) => {
     startTransition(async () => {
@@ -42,7 +42,7 @@ export default function Journal({ Journals }: JournalProps) {
     }
   }, [ActionSuccess]);
 
-  const handleFilter = (target: filters) => {
+  const handleFilter = (target: Draftfilters) => {
     setShowJournalsbyFilter(target);
     switch (target) {
       case "all":
@@ -72,7 +72,9 @@ export default function Journal({ Journals }: JournalProps) {
         <div className="flex gap-2">
           <Button className="w-fit">
             <select
-              onChange={(e) => handleFilter(e.currentTarget.value as filters)}
+              onChange={(e) =>
+                handleFilter(e.currentTarget.value as Draftfilters)
+              }
               defaultValue={ShowJournalsbyFilter}
               className="w-fit outline-none"
             >

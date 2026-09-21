@@ -63,7 +63,7 @@ export default function ProjectForm() {
       </Button>
     );
   return (
-    <div className="fixed inset-0 dark:bg-black/50 backdrop-blur-[2px]">
+    <div className="fixed z-100 inset-0 dark:bg-black/50 backdrop-blur-[2px]">
       <Card className="fixed inset-0 mx-auto mt-20 w-1/2 overflow-y-auto h-8/9 p-5 pb-6">
         <form action={formAction} className="flex flex-col gap-5">
           <h1 className="font-mono">Add project details</h1>

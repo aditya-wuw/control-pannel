@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { status } from "@/types/Pages/ContactsPage";
+import { status } from "@/types/PageTypes";
 
 export type FormState = {
   success: boolean;

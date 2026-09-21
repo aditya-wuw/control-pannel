@@ -5,18 +5,23 @@ import { Contact, Mail, User } from "lucide-react";
 import { getFormatedDate } from "@/lib/utils/getFormatedDates";
 import { Button } from "../ui/button";
 import { useActionState, useState, useTransition } from "react";
-import { UpdateContactAction } from "./Actions/UpdateContactStatus";
-import { filters, origin, status } from "@/types/Pages/ContactsPage";
+import { UpdateContactAction } from "./Actions/Journals/UpdateContactStatus";
 import { toast } from "sonner";
 import Toast from "../Toast";
 import { useRouter } from "next/navigation";
+import { Contactsfilters, origin, status } from "@/types/PageTypes";
 
 interface ContactsProps {
   Contacts: ContactsQuery[];
 }
 
 const statusOptions: status[] = ["pending", "contacted", "ignore"];
-const filterOptions: filters[] = ["all", "adi", "smug", ...statusOptions];
+const filterOptions: Contactsfilters[] = [
+  "all",
+  "adi",
+  "smug",
+  ...statusOptions,
+];
 
 export default function Contacts({ Contacts }: ContactsProps) {
   const ICON_SIZE = 16;
@@ -33,7 +38,7 @@ export default function Contacts({ Contacts }: ContactsProps) {
     });
   };
 
-  const handleFilter = (target: filters) => {
+  const handleFilter = (target: Contactsfilters) => {
     if (target === "all") return setContacts(Contacts);
     if (statusOptions.includes(target as status)) {
       const Targets = Contacts.filter((item) => item.status === target);
