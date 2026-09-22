@@ -4,11 +4,12 @@ import { Button } from "../ui/button";
 import ProjectForm from "../Forms/Projects/ProjectForm";
 import { Draftfilters } from "@/types/PageTypes";
 import { Card } from "../ui/card";
-import { GripVertical } from "lucide-react";
+import { ExternalLink, GripVertical } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { calculateNewOrder } from "@/lib/utils/CalculateNewOrder";
 import { UpdateOrderIndex } from "./Actions/Projects/UpdateOrderIndex";
+import { getFormatedDate } from "@/lib/utils/getFormatedDates";
 
 interface ProjectsProps {
   ProjectsData: ProjectsType[];
@@ -51,8 +52,13 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
     e.dataTransfer.dropEffect = "move";
   };
 
-  const handleDrop = async (e: React.DragEvent, targetId: string) => {
+  const handleDrop = async (
+    e: React.DragEvent,
+    targetId: string,
+    draft: boolean,
+  ) => {
     e.preventDefault();
+    if (draft) return;
     if (!draggedId || draggedId === targetId) return;
     const updatedItems = calculateNewOrder(items, draggedId, targetId);
     setItems(updatedItems);
@@ -96,19 +102,67 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
             <Card
               key={item.id}
               draggable
-              onDragStart={(e) => handleDragStart(e, item.id)}
+              onDragStart={(e) => !item.isdraft && handleDragStart(e, item.id)}
               onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, item.id)}
+              onDrop={(e) => handleDrop(e, item.id, item.isdraft ?? true)}
               className={`flex items-center gap-4 border p-3 rounded-xl shadow-sm transition-all
                     ${draggedId === item.id ? "opacity-50 scale-95 border-blue-500" : "opacity-100"}
                   `}
             >
-              {!item.isdraft && (
-                <div className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-700">
-                  <GripVertical size={20} />
+              <div className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-700">
+                {!item.isdraft && <GripVertical size={20} />}
+              </div>
+              <div className="flex-1 font-medium">
+                <div className="flex flex-col gap-2">
+                  <h1 className="font-bold">{item.title}</h1>
+                  {!item.isdraft && (
+                    <a
+                      href={`https://adi.smgcat.site/projects/${item.Link}`}
+                      target="_blank"
+                      className="flex-items gap-2 text-blue-500 underline text-sm"
+                    >
+                      <ExternalLink size={16} />
+                      {item.Link}
+                    </a>
+                  )}
+                  <h1 className="text-sm tracking-widest">
+                    tags - {item.tags?.toLocaleString()}
+                  </h1>
                 </div>
-              )}
-              <div className="flex-1 font-medium">{item.title}</div>
+                <div className="my-2 mt-4 flex justify-between gap-2">
+                  <div className="flex items-end">
+                    <h1>created {getFormatedDate(new Date(item.created_at)) ?? ""}</h1>
+                  </div>
+                  <div className="flex gap-2">
+                    <ProjectForm
+                      buttonTitle="Update project"
+                      id={item.id}
+                      FormState={{
+                        success: false,
+                        error: false,
+                        values: {
+                          title: item.title ?? "",
+                          Description: item.Description ?? "",
+                          AdditionalDescription:
+                            item.AdditionalDescription ?? "",
+                          Link: item.Link ?? "",
+                          content: item.content ?? "",
+                          isdraft: item.isdraft ? "Draft" : "Public",
+                          tags: item.tags?.toString() ?? "",
+                          githubLink: "",
+                          projectLiveUrl: "",
+                          videoDemo: item.DemoVideo ?? "",
+                          image: item.image ?? "",
+                        },
+                        message: "",
+                      }}
+                    />
+                    <Button>
+                      {item.isdraft ? "Publish" : "Save as Draft"}
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </Card>
           ))}
         </div>

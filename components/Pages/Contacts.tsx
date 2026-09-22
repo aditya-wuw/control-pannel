@@ -72,6 +72,9 @@ export default function Contacts({ Contacts }: ContactsProps) {
           </select>
         </Button>
       </div>
+      <h1 className="text-end text-sm opacity-50 mt-5">
+        total {ContactsState.length} contacts
+      </h1>
       <div className="mt-5 flex flex-col gap-3">
         {ContactsState.sort((a, b) => {
           if (a.created_at && b.created_at)

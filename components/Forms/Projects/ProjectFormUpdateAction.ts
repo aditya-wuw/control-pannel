@@ -41,7 +41,7 @@ export const JournalUpdateAction = async (
   const supabase = await createClient();
 
   const { error } = await supabase
-    .from(journal.data?.isdraft ? "personal_blogs_drafts" : "personal_blogs") //if not draft then it was a public post and can be updated
+    .from(journal.data?.isdraft ? "personal_blogs_drafts" : "personal_blogs")
     .update(Journal)
     .eq("id", id);
 

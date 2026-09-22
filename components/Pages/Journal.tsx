@@ -87,6 +87,9 @@ export default function Journal({ Journals }: JournalProps) {
           <JournalForm />
         </div>
       </div>
+      <h1 className="text-end text-sm opacity-50 mt-5">
+        total {JournalsState.length} journals
+      </h1>
       <div className="w-full mt-5 flex flex-col gap-5">
         {JournalsState.length === 0 ? (
           <h1 className="flex-center mt-10 opacity-70">

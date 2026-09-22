@@ -7,8 +7,6 @@ import { Label } from "@radix-ui/react-label";
 import { Check, ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
 import {
-  Dispatch,
-  SetStateAction,
   useActionState,
   useEffect,
   useRef,
@@ -19,7 +17,6 @@ import { toast } from "sonner";
 import { JournalSchemaError } from "@/types/SchemaErrorTypes";
 import Toast from "@/components/Toast";
 import { JournalUpdateAction } from "./JournalUpdateAction";
-import { useRouter } from "next/navigation";
 
 interface props {
   buttonTitle?: string;
@@ -161,7 +158,6 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
                     id="id"
                     name="id"
                     defaultValue={id}
-                    placeholder="Today I created this ...."
                     className="mt-2"
                   />
                 </Label>

@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 export const ProjectSchema = z.object({
+  id: z.string().optional(),
   title: z.string().nonempty().max(60, "must be with in 60 characters"),
   Link: z.string().nonempty().max(40, "must be with in 40 characters"),
   tags: z
@@ -18,6 +19,6 @@ export const ProjectSchema = z.object({
   projectLiveUrl: z.string().optional(),
   githubLink: z.string().optional(),
   videoDemo: z.string().optional(),
-  image: z.file().optional(),
+  image: z.file().or(z.string()).optional(),
   isdraft: z.string().nonoptional(),
 });

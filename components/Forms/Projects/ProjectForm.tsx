@@ -17,19 +17,29 @@ import { FormState, ProjectFormAction } from "./ProjectFormAction";
 import { toast } from "sonner";
 import { ProjectSchemaError } from "@/types/SchemaErrorTypes";
 
+interface props {
+  buttonTitle?: string;
+  id?: string;
+  FormState?: FormState;
+}
+
 const InitialFormState: FormState = {
   success: false,
   error: false,
   message: "",
 };
 
-export default function ProjectForm() {
+export default function ProjectForm({ buttonTitle, id, FormState }: props) {
   const [isOpen, setOpen] = useState(false);
   const [bannerPreview, setbannerPreview] = useState("");
   const bannerInputRef = useRef<HTMLInputElement>(null);
-  const [state, formAction, isPending] = useActionState(
+  const [SubmitState, formAction, SubmitPending] = useActionState(
     ProjectFormAction,
-    InitialFormState,
+    FormState ?? InitialFormState,
+  );
+  const [UpdateState, updateAction, UpdatePending] = useActionState(
+    ProjectFormAction,
+    FormState ?? InitialFormState,
   );
 
   const handleCancel = () => {
@@ -42,16 +52,19 @@ export default function ProjectForm() {
       bannerInputRef.current.value = "";
     }
   };
+  const state = id ? UpdateState : SubmitState;
 
   //reset the form
   useEffect(() => {
     if (state.success) {
-      toast.success("New project added");
+      toast.success(state.message as string);
       setbannerPreview("");
       if (bannerInputRef.current) {
         bannerInputRef.current.value = "";
       }
-      // console.log("called the reset clean");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
       setOpen(false);
     }
   }, [state]);
@@ -59,14 +72,17 @@ export default function ProjectForm() {
   if (!isOpen)
     return (
       <Button className="w-fit" onClick={() => setOpen(true)}>
-        Create new Project
+        {id ? buttonTitle : "Create new Project"}
       </Button>
     );
   return (
-    <div className="fixed z-100 inset-0 dark:bg-black/50 backdrop-blur-[2px]">
+    <div className="fixed z-100 inset-0 dark:bg-black/50 backdrop-blur-[2px] ">
       <Card className="fixed inset-0 mx-auto mt-20 w-1/2 overflow-y-auto h-8/9 p-5 pb-6">
-        <form action={formAction} className="flex flex-col gap-5">
-          <h1 className="font-mono">Add project details</h1>
+        <form
+          action={id ? updateAction : formAction}
+          className="flex flex-col gap-5"
+        >
+          <h1 className="font-mono">{id ? "Update" : "Add"} project details</h1>
           {state.error && typeof state.message === "string" && (
             <Card className="bg-red-400 p-3">{state.message}</Card>
           )}
@@ -113,6 +129,11 @@ export default function ProjectForm() {
               />
             </div>
             <div className="flex flex-col gap-4 lg:w-3/4 mt-4">
+              {id && (
+                <Label htmlFor="id" className="hidden">
+                  <Input id="id" name="id" defaultValue={id} className="mt-2" />
+                </Label>
+              )}
               <Label htmlFor="title">
                 Title{" "}
                 {state.error && (
@@ -282,7 +303,7 @@ export default function ProjectForm() {
               </Button>
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={id ? UpdatePending : SubmitPending}
                 className="hover:opacity-100 opacity-80"
               >
                 <Check /> Submit

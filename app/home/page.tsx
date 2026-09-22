@@ -40,7 +40,7 @@ const ICON_SIZE = 16;
 export default async function ProtectedPage() {
   const Counts = await getCountDetails();
   return (
-    <div className="relative flex-1 w-full flex flex-col pt-4 px-4">
+    <div className="relative flex-1 w-full flex flex-col pt-4 px-4 pb-5">
       <Toast />
       <h1 className="mb-4 flex items-center gap-2">
         <LayoutDashboard size={ICON_SIZE} />
@@ -55,7 +55,15 @@ export default async function ProtectedPage() {
         <Plus size={ICON_SIZE} />
         Create Somthing
       </h1>
-      <RecentJournalsProjects />
+      <div className="w-full flex gap-3 mt-5">
+        <JournalForm />
+        <ProjectForm />
+      </div>
+      <RecentJournalsProjects
+        RecentJournals={[]}
+        RecentProjects={[]}
+        RecentContacts={[]}
+      />
     </div>
   );
 }

@@ -106,3 +106,20 @@
 @utility flex-items {
     @apply flex items-center;
 }
+
+.dark ::-webkit-scrollbar {
+    width: 1px;
+    background-color: black;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background-color: gray;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: gray;
+}
+::-webkit-scrollbar {
+    width: 2px;
+    background-color: white;
+}
