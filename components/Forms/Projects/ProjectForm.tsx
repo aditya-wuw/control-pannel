@@ -13,17 +13,18 @@ import {
   useRef,
   useState,
 } from "react";
-import { FormState, ProjectFormAction } from "./ProjectFormAction";
+import { ProjectFormState, ProjectFormAction } from "./ProjectFormAction";
 import { toast } from "sonner";
 import { ProjectSchemaError } from "@/types/SchemaErrorTypes";
+import { ProjectUpdateAction } from "./ProjectFormUpdateAction";
 
 interface props {
   buttonTitle?: string;
   id?: string;
-  FormState?: FormState;
+  FormState?: ProjectFormState;
 }
 
-const InitialFormState: FormState = {
+const InitialFormState: ProjectFormState = {
   success: false,
   error: false,
   message: "",
@@ -38,7 +39,7 @@ export default function ProjectForm({ buttonTitle, id, FormState }: props) {
     FormState ?? InitialFormState,
   );
   const [UpdateState, updateAction, UpdatePending] = useActionState(
-    ProjectFormAction,
+    ProjectUpdateAction,
     FormState ?? InitialFormState,
   );
 

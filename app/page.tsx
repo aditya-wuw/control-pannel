@@ -1,5 +1,5 @@
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { LoginForm } from "@/components/login-form";
+import { LoginForm } from "@/components/Auth/login-form";
 
 export default function Home() {
   return (

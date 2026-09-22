@@ -2,50 +2,35 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { FormStateBuilder } from "@/lib/utils/FormStateHelper";
-import { getCleanJournalData } from "@/lib/utils/getCleanValidatedData";
+import {
+  getCleanJournalData,
+  getCleanProjectsData,
+} from "@/lib/utils/getCleanValidatedData";
 import { JournalSchema } from "@/lib/zod/JournalSchema";
 import { JournalType } from "@/types/database";
-import { JournalSchemaError } from "@/types/SchemaErrorTypes";
+import {
+  JournalSchemaError,
+  ProjectSchemaError,
+} from "@/types/SchemaErrorTypes";
 import { revalidatePath } from "next/cache";
 import z from "zod";
+import { ProjectInputType } from "./ProjectFormAction";
 
 export type JournalInputType = z.infer<typeof JournalSchema>;
 
 export interface FormState {
   success: boolean;
   error: boolean;
-  values?: JournalInputType;
-  message: string | JournalSchemaError | undefined;
+  values?: ProjectInputType;
+  message: string | ProjectSchemaError | undefined;
 }
 
-export const JournalUpdateAction = async (
+export const ProjectUpdateAction = async (
   _prevState: FormState,
   FormData: FormData,
 ): Promise<FormState> => {
-  const journal = getCleanJournalData(FormData);
-
-  if (journal.state && !journal.state.success) {
-    return journal.state;
-  }
-
-  // console.log(journal.data);
-
-  if (!journal.data)
-    return FormStateBuilder(false, true, "Formdata wasn't provided");
-
-  const { id, ...journaldata } = journal.data;
-  const currentTime = new Date().toISOString();
-  const Journal = { ...journaldata, updated: currentTime } as JournalType;
-
-  if (!id) return FormStateBuilder(false, true, "Id wasn't provided");
-  const supabase = await createClient();
-
-  const { error } = await supabase
-    .from(journal.data?.isdraft ? "personal_blogs_drafts" : "personal_blogs")
-    .update(Journal)
-    .eq("id", id);
-
-  if (error) return FormStateBuilder(false, true, error.message);
-  revalidatePath("/home/journals", "layout");
+  const Projects = getCleanProjectsData(FormData);
+  if (Projects.state && Projects.state.error) return Projects.state;
+  console.log(Projects.data);
   return FormStateBuilder(true, false, "Journal updated");
 };

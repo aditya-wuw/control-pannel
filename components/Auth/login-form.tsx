@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Eye, EyeClosed, EyeDashed } from "lucide-react";
-import LoginWithPassKey from "./passkey/LoginWithPasskey";
+import LoginWithPassKey from "../passkey/LoginWithPasskey";
 import { toast } from "sonner";
 
 export function LoginForm({

@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { createClient } from "@/lib/supabase/server";
-import { LogoutButton } from "./logout-button";
-import Settings from "./Settings";
-import { ThemeSwitcher } from "./theme-switcher";
+import Settings from "../Settings";
+import { ThemeSwitcher } from "../theme-switcher";
 
 export async function AuthButton() {
   const supabase = await createClient();

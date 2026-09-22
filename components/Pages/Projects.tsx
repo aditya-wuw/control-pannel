@@ -70,7 +70,11 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
     setDraggedId(null);
   };
 
-  const sortedItems = [...items].sort((a, b) => a.orderIndex - b.orderIndex);
+  const sortedItems = [...items].sort((a, b) =>
+    Filter === "Drafts"
+      ? new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      : a.orderIndex - b.orderIndex,
+  );
 
   return (
     <div className="mt-5 px-4">
@@ -131,7 +135,9 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
                 </div>
                 <div className="my-2 mt-4 flex justify-between gap-2">
                   <div className="flex items-end">
-                    <h1>created {getFormatedDate(new Date(item.created_at)) ?? ""}</h1>
+                    <h1>
+                      created {getFormatedDate(new Date(item.created_at)) ?? ""}
+                    </h1>
                   </div>
                   <div className="flex gap-2">
                     <ProjectForm

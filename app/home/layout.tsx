@@ -1,4 +1,4 @@
-import { AuthButton } from "@/components/auth-button";
+import { AuthButton } from "@/components/Auth/auth-button";
 import Toast from "@/components/Toast";
 import Link from "next/link";
 import { Suspense } from "react";

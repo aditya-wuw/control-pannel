@@ -6,7 +6,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { LogoutButton } from "./logout-button";
+import { LogoutButton } from "./Auth/logout-button";
 import RegisterPassKey from "./passkey/RegisterPasskey";
 
 interface props {
