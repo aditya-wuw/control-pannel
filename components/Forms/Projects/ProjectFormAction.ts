@@ -22,7 +22,7 @@ export const ProjectFormAction = async (
 ): Promise<ProjectFormState> => {
   const Projects = getCleanProjectsData(FormData);
   if (Projects.state && Projects.state.error) return Projects.state;
-  
+
   const saved = await submitForm(
     Projects.data?.isdraft ? "personal_projects_drafts" : "personal_projects",
     Projects.data,

@@ -1,15 +1,16 @@
 "use client";
-import { ProjectsType } from "@/types/database";
-import { Button } from "../ui/button";
-import ProjectForm from "../Forms/Projects/ProjectForm";
-import { Draftfilters } from "@/types/PageTypes";
-import { Card } from "../ui/card";
-import { ExternalLink, GripVertical } from "lucide-react";
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Card } from "../ui/card";
+import { Button } from "../ui/button";
+import { ProjectsType } from "@/types/database";
+import { Draftfilters } from "@/types/PageTypes";
+import ProjectForm from "../Forms/Projects/ProjectForm";
+import { ExternalLink, GripVertical } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
+import { getFormatedDate } from "@/lib/utils/getFormatedDates";
 import { calculateNewOrder } from "@/lib/utils/CalculateNewOrder";
 import { UpdateOrderIndex } from "./Actions/Projects/UpdateOrderIndex";
-import { getFormatedDate } from "@/lib/utils/getFormatedDates";
+import { updateProjectsPublishAction } from "./Actions/Projects/UpdatePublishStatus";
 
 interface ProjectsProps {
   ProjectsData: ProjectsType[];
@@ -18,6 +19,7 @@ interface ProjectsProps {
 const filterOptions: Draftfilters[] = ["Public", "Drafts"];
 
 export default function Projects({ ProjectsData }: ProjectsProps) {
+  const [pending, startTranstion] = useTransition();
   const [items, setItems] = useState<ProjectsType[]>(ProjectsData);
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [Filter, setFilter] = useState<Draftfilters>("Public");
@@ -42,6 +44,18 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
     handleFilter("Public");
   }, []);
 
+  const handleSaveStatus = (id: string, isdraft: boolean) => {
+    startTranstion(async () => {
+      const success = await updateProjectsPublishAction(id, isdraft);
+      if (!success) toast.error("Failed to update publish status");
+      toast.success(`Publish status updated for ${id}`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    });
+  };
+
+  // drag and drop orderindex change behaviour
   const handleDragStart = (e: React.DragEvent, id: string) => {
     setDraggedId(id);
     e.dataTransfer.effectAllowed = "move";
@@ -101,6 +115,9 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
         <h1 className="text-end text-sm opacity-50">
           total {sortedItems.length} projects
         </h1>
+        {sortedItems.length === 0 && (
+          <h1 className="flex-center p-10 opacity-50">no projects found</h1>
+        )}
         <div className="flex flex-col gap-3">
           {sortedItems.map((item) => (
             <Card
@@ -163,7 +180,14 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
                         message: "",
                       }}
                     />
-                    <Button>
+                    <Button
+                      type="button"
+                      disabled={pending}
+                      onClick={() =>
+                        handleSaveStatus(item.id, item.isdraft ?? true)
+                      }
+                      className={`${pending ? "opacity-50" : "opacity-100"}`}
+                    >
                       {item.isdraft ? "Publish" : "Save as Draft"}
                     </Button>
                   </div>
