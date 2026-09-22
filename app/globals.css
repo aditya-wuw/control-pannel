@@ -102,3 +102,7 @@
 @utility flex-center {
     @apply flex items-center justify-center;
 }
+
+@utility flex-items {
+    @apply flex items-center;
+}

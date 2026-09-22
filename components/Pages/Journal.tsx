@@ -1,6 +1,6 @@
 "use client";
 import { JournalDraftsType, JournalType } from "@/types/database";
-import { Notebook } from "lucide-react";
+import { ExternalLink, Notebook } from "lucide-react";
 import { Button } from "../ui/button";
 import { useEffect, useState, useTransition } from "react";
 import { Card } from "../ui/card";
@@ -9,6 +9,7 @@ import { UpdatePublishAction } from "./Actions/Journals/UpdatePublishStatus";
 import { useRouter } from "next/navigation";
 import JournalForm from "../Forms/Journal/JournalForm";
 import { Draftfilters } from "@/types/PageTypes";
+import { getFormatedDate } from "@/lib/utils/getFormatedDates";
 
 interface JournalProps {
   Journals: JournalType[];
@@ -92,46 +93,76 @@ export default function Journal({ Journals }: JournalProps) {
             no Journals available
           </h1>
         ) : (
-          JournalsState.map((i) => (
+          JournalsState.sort((a, b) => {
+            const a_published = new Date(a.published ?? "").getTime();
+            const b_published = new Date(b.published ?? "").getTime();
+            const sorted = b_published - a_published;
+            return sorted;
+          }).map((i) => (
             <Card className="w-full p-4" key={i.id}>
-              <div>
-                <h1>{i.title}</h1>
-              </div>
-              <div className="flex justify-end gap-2">
-                {
-                  <JournalForm
-                    buttonTitle={"Update"}
-                    id={i.id}
-                    FormState={{
-                      success: false,
-                      error: false,
-                      message: "",
-                      values: {
-                        title: i.title,
-                        content: i.content,
-                        shortDescription: i.shortDescription,
-                        banner: i.banner ?? "",
-                      },
-                    }}
-                  />
-                }
-                <Button>
-                  <select
-                    defaultValue={i.isdraft ? "Drafts" : "Public"}
-                    onChange={(e) =>
-                      handleStatusUpdate(
-                        i.id,
-                        e.currentTarget.value === "Drafts",
-                      )
-                    }
-                    disabled={pending}
-                    className="w-fit outline-none"
+              <div className="flex justify-between gap-2">
+                <div>
+                  <h1>{i.title}</h1>
+                  <a
+                    href={`https://adi.smgcat.site/journal/${i.id}`}
+                    target="_blank"
+                    className="mt-2 flex-items gap-2 text-blue-500 underline opacity-90 hover:opacity-100 text-sm"
                   >
-                    {publishOptions.map((i) => (
-                      <option key={i}>{i}</option>
-                    ))}
-                  </select>
-                </Button>
+                    <ExternalLink size={16} />
+                    {i.id}
+                  </a>
+                </div>
+              </div>
+              <div className="flex justify-between gap-2">
+                <div className="flex gap-2 mt-4 text-sm">
+                  {i.updated && (
+                    <span className="opacity-70">
+                      updated {getFormatedDate(new Date(i.updated)) ?? ""}
+                      <span className="mx-1">•</span>
+                    </span>
+                  )}
+
+                  <h1 className="opacity-70">
+                    published{" "}
+                    {getFormatedDate(new Date(i.published ?? "")) ?? ""}
+                  </h1>
+                </div>
+                <div className="flex gap-2">
+                  {
+                    <JournalForm
+                      buttonTitle={"Update"}
+                      id={i.id}
+                      FormState={{
+                        success: false,
+                        error: false,
+                        message: "",
+                        values: {
+                          title: i.title,
+                          content: i.content,
+                          shortDescription: i.shortDescription,
+                          banner: i.banner ?? "",
+                        },
+                      }}
+                    />
+                  }
+                  <Button>
+                    <select
+                      defaultValue={i.isdraft ? "Drafts" : "Public"}
+                      onChange={(e) =>
+                        handleStatusUpdate(
+                          i.id,
+                          e.currentTarget.value === "Drafts",
+                        )
+                      }
+                      disabled={pending}
+                      className="w-fit outline-none"
+                    >
+                      {publishOptions.map((i) => (
+                        <option key={i}>{i}</option>
+                      ))}
+                    </select>
+                  </Button>
+                </div>
               </div>
             </Card>
           ))
