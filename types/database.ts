@@ -10,8 +10,16 @@ export type ProjectsDraftsType =
 export type JournalType = Database["public"]["Tables"]["personal_blogs"]["Row"];
 export type JournalDraftsType =
   Database["public"]["Tables"]["personal_blogs_drafts"]["Row"];
-  
+export type PublicAssetsDataType =
+  Database["public"]["Tables"]["public_assets"]["Row"];
+
 export interface ErrorPromiose {
   success: boolean;
   message: string;
+}
+
+export interface ResponseBuilder<T = never> {
+  success: boolean;
+  message: string;
+  data?: T;
 }

@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { FormStateBuilder } from "@/lib/utils/FormStateHelper";
+import { FormStateBuilder } from "@/lib/utils/Helpers";
 import { getCleanProjectsData } from "@/lib/utils/getCleanValidatedData";
 import { ProjectSchemaError } from "@/types/SchemaErrorTypes";
 import { ProjectInputType } from "./ProjectFormAction";
@@ -19,7 +19,7 @@ export const ProjectUpdateAction = async (
   FormData: FormData,
 ): Promise<FormState> => {
   const supabase = await createClient();
-  const Projects = getCleanProjectsData(FormData);
+  const Projects = await getCleanProjectsData(FormData);
   if (Projects.state && Projects.state.error) return Projects.state;
   console.log(Projects.data);
   if (!Projects.data) return FormStateBuilder(false, true, "data not found");

@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { FormStateBuilder } from "@/lib/utils/FormStateHelper";
+import { FormStateBuilder } from "@/lib/utils/Helpers";
 import { getCleanJournalData } from "@/lib/utils/getCleanValidatedData";
 import { JournalSchema } from "@/lib/zod/JournalSchema";
 import { JournalType } from "@/types/database";
@@ -22,7 +22,7 @@ export const JournalUpdateAction = async (
   _prevState: FormState,
   FormData: FormData,
 ): Promise<FormState> => {
-  const journal = getCleanJournalData(FormData);
+  const journal = await getCleanJournalData(FormData);
 
   if (journal.state && !journal.state.success) {
     return journal.state;

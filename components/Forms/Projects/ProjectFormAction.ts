@@ -1,7 +1,7 @@
 "use server";
 
 import { submitForm } from "@/lib/supabase/Actions/submitForm";
-import { FormStateBuilder } from "@/lib/utils/FormStateHelper";
+import { FormStateBuilder } from "@/lib/utils/Helpers";
 import { getCleanProjectsData } from "@/lib/utils/getCleanValidatedData";
 import { ProjectSchema } from "@/lib/zod/ProjectSchema";
 import { ProjectSchemaError } from "@/types/SchemaErrorTypes";
@@ -20,7 +20,7 @@ export const ProjectFormAction = async (
   _prevState: ProjectFormState,
   FormData: FormData,
 ): Promise<ProjectFormState> => {
-  const Projects = getCleanProjectsData(FormData);
+  const Projects = await getCleanProjectsData(FormData);
   if (Projects.state && Projects.state.error) return Projects.state;
 
   const saved = await submitForm(

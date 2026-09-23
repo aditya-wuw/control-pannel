@@ -251,6 +251,27 @@ export type Database = {
         }
         Relationships: []
       }
+      public_assets: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          path: string | null
+          url: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          path?: string | null
+          url?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          path?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
       update_logs: {
         Row: {
           id: string

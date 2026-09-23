@@ -12,6 +12,7 @@ import {
   ProjectInputType,
 } from "@/components/Forms/Projects/ProjectFormAction";
 import { ProjectsType } from "@/types/database";
+import { uploadToPublicBucket } from "../supabase/Actions/uploadToPublicBucket";
 
 interface ReturnJournalData {
   data?: JournalInputType;
@@ -22,7 +23,16 @@ interface ReturnProjectData {
   state?: ProjectFormState;
 }
 
-export const getCleanJournalData = (FormData: FormData): ReturnJournalData => {
+const buildUniqueName = (initial: string): string => {
+  const shortId = crypto.randomUUID().split("-")[0];
+  const timeStamp = new Date().toISOString();
+  const filename = `${initial}-${shortId}-${timeStamp}`;
+  return filename;
+};
+
+export const getCleanJournalData = async (
+  FormData: FormData,
+): Promise<ReturnJournalData> => {
   const form = Object.fromEntries(FormData.entries());
   const ValidatedForm = JournalSchema.safeParse(form);
   if (!ValidatedForm.success) {
@@ -40,8 +50,18 @@ export const getCleanJournalData = (FormData: FormData): ReturnJournalData => {
   const ValidFormData = ValidatedForm.data;
   let constructBannerPath = "";
   if (ValidFormData.banner instanceof File) {
-    constructBannerPath = "store/" + (ValidFormData.banner?.name ?? "");
-    //handle the file upload and construct the accesable url
+    const filename = buildUniqueName(ValidFormData.banner.name);
+    constructBannerPath = "store/" + filename;
+    const success = uploadToPublicBucket(filename, ValidFormData.banner);
+    if (!success)
+      return {
+        state: {
+          success: false,
+          error: true,
+          values: form as JournalInputType,
+          message: "Failed to upload file",
+        },
+      };
   }
   constructBannerPath = ValidFormData.banner as string;
   const { isdraft, ...Validdata } = ValidFormData;
@@ -54,7 +74,9 @@ export const getCleanJournalData = (FormData: FormData): ReturnJournalData => {
   return { data: Journal };
 };
 
-export const getCleanProjectsData = (FormData: FormData): ReturnProjectData => {
+export const getCleanProjectsData = async (
+  FormData: FormData,
+): Promise<ReturnProjectData> => {
   const form = Object.fromEntries(FormData.entries());
   const ValidatedForm = ProjectSchema.safeParse(form);
   if (!ValidatedForm.success) {
@@ -72,7 +94,18 @@ export const getCleanProjectsData = (FormData: FormData): ReturnProjectData => {
   const ValidFormData = ValidatedForm.data;
   let constructImagePath = "";
   if (ValidFormData.image instanceof File) {
-    constructImagePath = "store/" + (ValidFormData.image?.name ?? "");
+    const filename = buildUniqueName(ValidFormData.image.name);
+    constructImagePath = "store/" + filename;
+    const success = await uploadToPublicBucket(filename, ValidFormData.image);
+    if (!success)
+      return {
+        state: {
+          success: false,
+          error: true,
+          values: form as ProjectInputType,
+          message: "Failed to upload file",
+        },
+      };
   }
   constructImagePath = ValidFormData.image as string;
   const { githubLink, projectLiveUrl, videoDemo, isdraft, ...cleanData } =
