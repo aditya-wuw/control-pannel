@@ -49,10 +49,14 @@ export const getCleanJournalData = async (
   }
   const ValidFormData = ValidatedForm.data;
   let constructBannerPath = "";
+  constructBannerPath = ValidFormData.banner as string;
+  console.log(`validateded banner : ${ValidFormData.banner}`);
+
   if (ValidFormData.banner instanceof File) {
+    console.log(`upload this block`);
     const filename = buildUniqueName(ValidFormData.banner.name);
     constructBannerPath = "store/" + filename;
-    const success = uploadToPublicBucket(filename, ValidFormData.banner);
+    const success = await uploadToPublicBucket(filename, ValidFormData.banner);
     if (!success)
       return {
         state: {
@@ -63,7 +67,6 @@ export const getCleanJournalData = async (
         },
       };
   }
-  constructBannerPath = ValidFormData.banner as string;
   const { isdraft, ...Validdata } = ValidFormData;
   const Journal = {
     ...Validdata,
@@ -93,6 +96,7 @@ export const getCleanProjectsData = async (
   }
   const ValidFormData = ValidatedForm.data;
   let constructImagePath = "";
+  constructImagePath = ValidFormData.image as string;
   if (ValidFormData.image instanceof File) {
     const filename = buildUniqueName(ValidFormData.image.name);
     constructImagePath = "store/" + filename;
@@ -107,7 +111,6 @@ export const getCleanProjectsData = async (
         },
       };
   }
-  constructImagePath = ValidFormData.image as string;
   const { githubLink, projectLiveUrl, videoDemo, isdraft, ...cleanData } =
     ValidFormData;
 

@@ -42,17 +42,17 @@ const getRecentEvents = async () => {
   const { data: ContactsData, error: ContactsFetchError } = await supabase
     .from("contact_queries")
     .select("id,SenderName,origin,status,created_at")
-    .range(0, 3);
+    .range(0, 2);
 
   const { data: Projects, error: ProjectsFetchError } = await supabase
     .from("personal_projects")
     .select("id,title,Link,created_at")
-    .range(0, 3);
+    .range(0, 2);
 
   const { data: Journals, error: JournalsFetchError } = await supabase
     .from("personal_blogs")
     .select("id,title,published,updated")
-    .range(0, 3);
+    .range(0, 2);
 
   const error = ContactsFetchError || ProjectsFetchError || JournalsFetchError;
 

@@ -6,12 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Check, ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
-import {
-  useActionState,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { FormState, JournalFormAction } from "./JournalFormAction";
 import { toast } from "sonner";
 import { JournalSchemaError } from "@/types/SchemaErrorTypes";
@@ -96,7 +91,7 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
           <div className="lg:flex flex-row-reverse gap-5">
             <div>
               {bannerPreview ? (
-                <div className="relative lg:w-80 lg:h-full h-30 overflow-hidden rounded-2xl">
+                <div className="relative lg:w-80 h-45 overflow-hidden rounded-2xl">
                   <Image
                     src={bannerPreview ?? ""}
                     alt="preview banner"
@@ -114,7 +109,7 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
                 </div>
               ) : (
                 <div className="border-4 p-2 border-dotted lg:w-80 h-full rounded-2xl flex-center">
-                  <Label htmlFor="image" className="flex gap-2">
+                  <Label htmlFor="banner" className="flex gap-2">
                     <ImagePlus />
                     Add an Image
                   </Label>
@@ -123,8 +118,8 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
               <Input
                 ref={bannerInputRef}
                 type="file"
-                id="image"
-                name="image"
+                id="banner"
+                name="banner"
                 accept="image/*"
                 onChange={(e) => {
                   const file = e.currentTarget.files?.[0];
@@ -154,12 +149,7 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
               </Label>
               {id && (
                 <Label htmlFor="id" className="hidden">
-                  <Input
-                    id="id"
-                    name="id"
-                    defaultValue={id}
-                    className="mt-2"
-                  />
+                  <Input id="id" name="id" defaultValue={id} className="mt-2" />
                 </Label>
               )}
               <Label htmlFor="shortDescription">
