@@ -17,6 +17,7 @@ import { ProjectFormState, ProjectFormAction } from "./ProjectFormAction";
 import { toast } from "sonner";
 import { ProjectSchemaError } from "@/types/SchemaErrorTypes";
 import { ProjectUpdateAction } from "./ProjectFormUpdateAction";
+import { LazyReload } from "@/lib/utils/Helpers";
 
 interface props {
   buttonTitle?: string;
@@ -63,9 +64,7 @@ export default function ProjectForm({ buttonTitle, id, FormState }: props) {
       if (bannerInputRef.current) {
         bannerInputRef.current.value = "";
       }
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      LazyReload(3000);
       setOpen(false);
     }
   }, [state]);

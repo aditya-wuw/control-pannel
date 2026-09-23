@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { JournalSchemaError } from "@/types/SchemaErrorTypes";
 import Toast from "@/components/Toast";
 import { JournalUpdateAction } from "./JournalUpdateAction";
+import { LazyReload } from "@/lib/utils/Helpers";
 
 interface props {
   buttonTitle?: string;
@@ -62,9 +63,7 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
       if (bannerInputRef.current) {
         bannerInputRef.current.value = "";
       }
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      LazyReload(3000);
       setOpen(false);
     }
   }, [state]);

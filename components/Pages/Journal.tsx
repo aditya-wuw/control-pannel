@@ -1,6 +1,6 @@
 "use client";
 import { JournalDraftsType, JournalType } from "@/types/database";
-import { ExternalLink, Notebook } from "lucide-react";
+import { ExternalLink, Notebook, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { useEffect, useState, useTransition } from "react";
 import { Card } from "../ui/card";
@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import JournalForm from "../Forms/Journal/JournalForm";
 import { Draftfilters } from "@/types/PageTypes";
 import { getFormatedDate } from "@/lib/utils/getFormatedDates";
+import { deleteSpecificRow } from "@/lib/supabase/Actions/deleteData";
+import { LazyReload } from "@/lib/utils/Helpers";
 
 interface JournalProps {
   Journals: JournalType[];
@@ -25,6 +27,18 @@ export default function Journal({ Journals }: JournalProps) {
   const [ShowJournalsbyFilter, setShowJournalsbyFilter] =
     useState<Draftfilters>("all");
 
+  const handleDelete = (id: string, isdraft: boolean) => {
+    startTransition(async () => {
+      const response = await deleteSpecificRow(
+        isdraft ? "personal_blogs_drafts" : "personal_blogs",
+        id,
+      );
+      if (!response.success) toast.error(response.message);
+      toast.success(response.message);
+      LazyReload(3000);
+    });
+  };
+
   const handleStatusUpdate = (id: string, isDraft: boolean) => {
     startTransition(async () => {
       const update = await UpdatePublishAction(id, isDraft);
@@ -39,7 +53,6 @@ export default function Journal({ Journals }: JournalProps) {
   useEffect(() => {
     if (ActionSuccess) {
       router.refresh();
-      console.log("Refershing");
     }
   }, [ActionSuccess]);
 
@@ -131,6 +144,23 @@ export default function Journal({ Journals }: JournalProps) {
                   </h1>
                 </div>
                 <div className="flex gap-2">
+                  <Button>
+                    <select
+                      defaultValue={i.isdraft ? "Drafts" : "Public"}
+                      onChange={(e) =>
+                        handleStatusUpdate(
+                          i.id,
+                          e.currentTarget.value === "Drafts",
+                        )
+                      }
+                      disabled={pending}
+                      className="w-fit outline-none"
+                    >
+                      {publishOptions.map((i) => (
+                        <option key={i}>{i}</option>
+                      ))}
+                    </select>
+                  </Button>
                   {
                     <JournalForm
                       buttonTitle={"Update"}
@@ -148,22 +178,13 @@ export default function Journal({ Journals }: JournalProps) {
                       }}
                     />
                   }
-                  <Button>
-                    <select
-                      defaultValue={i.isdraft ? "Drafts" : "Public"}
-                      onChange={(e) =>
-                        handleStatusUpdate(
-                          i.id,
-                          e.currentTarget.value === "Drafts",
-                        )
-                      }
-                      disabled={pending}
-                      className="w-fit outline-none"
-                    >
-                      {publishOptions.map((i) => (
-                        <option key={i}>{i}</option>
-                      ))}
-                    </select>
+                  <Button
+                    type="button"
+                    onClick={() => handleDelete(i.id, i.isdraft ?? true)}
+                    disabled={pending}
+                    className="bg-red-500 text-white hover:bg-red-800"
+                  >
+                    <Trash />
                   </Button>
                 </div>
               </div>

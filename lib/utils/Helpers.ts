@@ -23,3 +23,9 @@ export const Response = <T = unknown>(
     data: data,
   };
 };
+
+export const LazyReload = (delay: number) => {
+  setTimeout(() => {
+    window.location.reload();
+  }, delay);
+};
