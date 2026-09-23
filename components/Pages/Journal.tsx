@@ -27,7 +27,9 @@ export default function Journal({ Journals }: JournalProps) {
   const [ShowJournalsbyFilter, setShowJournalsbyFilter] =
     useState<Draftfilters>("all");
 
-  const handleDelete = (id: string, isdraft: boolean) => {
+  const handleDelete = (title: string, id: string, isdraft: boolean) => {
+    const yes = window.confirm(`Are you sure you want to delete, "${title}"`);
+    if (!yes) return;
     startTransition(async () => {
       const response = await deleteSpecificRow(
         isdraft ? "personal_blogs_drafts" : "personal_blogs",
@@ -180,7 +182,9 @@ export default function Journal({ Journals }: JournalProps) {
                   }
                   <Button
                     type="button"
-                    onClick={() => handleDelete(i.id, i.isdraft ?? true)}
+                    onClick={() =>
+                      handleDelete(i.title, i.id, i.isdraft ?? true)
+                    }
                     disabled={pending}
                     className="bg-red-500 text-white hover:bg-red-800"
                   >

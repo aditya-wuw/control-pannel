@@ -5,12 +5,14 @@ import { Button } from "../ui/button";
 import { ProjectsType } from "@/types/database";
 import { Draftfilters } from "@/types/PageTypes";
 import ProjectForm from "../Forms/Projects/ProjectForm";
-import { ExternalLink, GripVertical } from "lucide-react";
+import { ExternalLink, GripVertical, Trash } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { getFormatedDate } from "@/lib/utils/getFormatedDates";
 import { calculateNewOrder } from "@/lib/utils/CalculateNewOrder";
 import { UpdateOrderIndex } from "./Actions/Projects/UpdateOrderIndex";
 import { updateProjectsPublishAction } from "./Actions/Projects/UpdatePublishStatus";
+import { deleteSpecificRow } from "@/lib/supabase/Actions/deleteData";
+import { LazyReload } from "@/lib/utils/Helpers";
 
 interface ProjectsProps {
   ProjectsData: ProjectsType[];
@@ -23,6 +25,20 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
   const [items, setItems] = useState<ProjectsType[]>(ProjectsData);
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [Filter, setFilter] = useState<Draftfilters>("Public");
+
+  const handleDelete = (title: string, id: string, isdraft: boolean) => {
+    const yes = window.confirm(`Are you sure you want to delete, "${title}"`);
+    if (!yes) return;
+    startTranstion(async () => {
+      const response = await deleteSpecificRow(
+        isdraft ? "personal_projects_drafts" : "personal_projects",
+        id,
+      );
+      if (!response.success) toast.error(response.message);
+      toast.success(response.message);
+      LazyReload(3000);
+    });
+  };
 
   const handleFilter = (target: Draftfilters) => {
     setFilter(target);
@@ -189,6 +205,20 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
                       className={`${pending ? "opacity-50" : "opacity-100"}`}
                     >
                       {item.isdraft ? "Publish" : "Save as Draft"}
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        handleDelete(
+                          item.title ?? "",
+                          item.id,
+                          item.isdraft ?? true,
+                        )
+                      }
+                      disabled={pending}
+                      className="bg-red-500 text-white hover:bg-red-800"
+                    >
+                      <Trash />
                     </Button>
                   </div>
                 </div>
