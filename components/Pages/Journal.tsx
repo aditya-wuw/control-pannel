@@ -12,6 +12,7 @@ import { Draftfilters } from "@/types/PageTypes";
 import { getFormatedDate } from "@/lib/utils/getFormatedDates";
 import { deleteSpecificRow } from "@/lib/supabase/Actions/deleteData";
 import { LazyReload } from "@/lib/utils/Helpers";
+import Link from "next/link";
 
 interface JournalProps {
   Journals: JournalType[];
@@ -121,14 +122,14 @@ export default function Journal({ Journals }: JournalProps) {
               <div className="flex justify-between gap-2">
                 <div>
                   <h1>{i.title}</h1>
-                  <a
-                    href={`https://adi.smgcat.site/journal/${i.id}`}
+                  <Link
+                    href={`${process.env.NEXT_PUBLIC_ORIGIN}/journal/${i.id}`}
                     target="_blank"
                     className="mt-2 flex-items gap-2 text-blue-500 underline opacity-90 hover:opacity-100 text-sm"
                   >
                     <ExternalLink size={16} />
                     {i.id}
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="flex justify-between gap-2">

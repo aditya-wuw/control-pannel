@@ -96,59 +96,17 @@ export default function RecentJournalsProjects({
           <ClockFading size={16} />
           Recent posts
         </h1>
-        <Link href={"/home/journals"}>
-          <Card className="p-4 mt-2 w-full">
-            <h1 className="opacity-80 text-md">Recent Journals</h1>
-            {!RecentJournals || RecentJournals.length === 0 ? (
-              <h1 className="text-sm flex-center p-10 opacity-50">
-                {" "}
-                no new journals to show
-              </h1>
-            ) : (
-              <div>
-                <div>
-                  {RecentJournals.map((i) => (
-                    <div
-                      key={i.id}
-                      className="flex max-xl:flex-col xl:justify-between mt-2"
-                    >
-                      <div className="grid grid-cols-2 gap-10">
-                        <h1 className="w-50  overflow-hidden">{i.title}</h1>
-                        <div className="relative z-100 flex-items text-nowrap gap-2 underline text-blue-500 overflow-hidden text-ellipsis">
-                          <ExternalLink size={16} />
-                          {i.id}
-                        </div>
-                      </div>
-                      <div>
-                        <h1 className="text-sm opacity-50">
-                          {getFormatedDate(
-                            new Date(
-                              i.updated ? i.updated : (i.published ?? ""),
-                            ),
-                          ) ?? ""}
-                        </h1>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            <h1 className="text-blue-500/60 hover:text-blue-500 text-sm px-2">
-              go to journals
+        <Card className="p-4 mt-2 w-full">
+          <h1 className="opacity-80 text-md">Recent Journals</h1>
+          {!RecentJournals || RecentJournals.length === 0 ? (
+            <h1 className="text-sm flex-center p-10 opacity-50">
+              {" "}
+              no new journals to show
             </h1>
-          </Card>
-        </Link>
-        <Link href={"/home/projects"}>
-          <Card className="p-4 w-full">
-            <h1 className="opacity-80 text-md">Recent projects</h1>
-            {!RecentProjects || RecentProjects.length === 0 ? (
-              <h1 className="text-sm flex-center p-10 opacity-50">
-                {" "}
-                no new projects to show
-              </h1>
-            ) : (
-              <div className="p-3">
-                {RecentProjects.map((i) => (
+          ) : (
+            <div>
+              <div>
+                {RecentJournals.map((i) => (
                   <div
                     key={i.id}
                     className="flex max-xl:flex-col xl:justify-between mt-2"
@@ -157,23 +115,67 @@ export default function RecentJournalsProjects({
                       <h1 className="w-50  overflow-hidden">{i.title}</h1>
                       <div className="relative z-100 flex-items text-nowrap gap-2 underline text-blue-500 overflow-hidden text-ellipsis">
                         <ExternalLink size={16} />
-                        {i.Link}
+                        {i.id}
                       </div>
                     </div>
                     <div>
                       <h1 className="text-sm opacity-50">
-                        {getFormatedDate(new Date(i.created_at)) ?? ""}
+                        {getFormatedDate(
+                          new Date(i.updated ? i.updated : (i.published ?? "")),
+                        ) ?? ""}
                       </h1>
                     </div>
                   </div>
                 ))}
               </div>
-            )}
+            </div>
+          )}
+          <Link href={"/home/journals"}>
+            <h1 className="text-blue-500/60 hover:text-blue-500 text-sm px-2">
+              go to journals
+            </h1>
+          </Link>
+        </Card>
+        <Card className="p-4 w-full">
+          <h1 className="opacity-80 text-md">Recent projects</h1>
+          {!RecentProjects || RecentProjects.length === 0 ? (
+            <h1 className="text-sm flex-center p-10 opacity-50">
+              {" "}
+              no new projects to show
+            </h1>
+          ) : (
+            <div className="p-3">
+              {RecentProjects.map((i) => (
+                <div
+                  key={i.id}
+                  className="flex max-xl:flex-col xl:justify-between mt-2"
+                >
+                  <div className="grid grid-cols-2 gap-10">
+                    <h1 className="w-50  overflow-hidden">{i.title}</h1>
+                    <Link
+                      href={`${process.env.NEXT_PUBLIC_ORIGIN}/projects/${i.Link}`}
+                      target="_blank"
+                      className="relative z-100 flex-items text-nowrap gap-2 underline text-blue-500 overflow-hidden text-ellipsis"
+                    >
+                      <ExternalLink size={16} />
+                      {i.Link}
+                    </Link>
+                  </div>
+                  <div>
+                    <h1 className="text-sm opacity-50">
+                      {getFormatedDate(new Date(i.created_at)) ?? ""}
+                    </h1>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <Link href={"/home/projects"}>
             <h1 className="text-blue-500/60 hover:text-blue-500 text-sm px-2">
               go to projects
             </h1>
-          </Card>
-        </Link>
+          </Link>
+        </Card>
       </div>
     </div>
   );

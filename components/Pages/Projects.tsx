@@ -13,6 +13,7 @@ import { UpdateOrderIndex } from "./Actions/Projects/UpdateOrderIndex";
 import { updateProjectsPublishAction } from "./Actions/Projects/UpdatePublishStatus";
 import { deleteSpecificRow } from "@/lib/supabase/Actions/deleteData";
 import { LazyReload } from "@/lib/utils/Helpers";
+import Link from "next/link";
 
 interface ProjectsProps {
   ProjectsData: ProjectsType[];
@@ -153,14 +154,14 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
                 <div className="flex flex-col gap-2">
                   <h1 className="font-bold">{item.title}</h1>
                   {!item.isdraft && (
-                    <a
-                      href={`https://adi.smgcat.site/projects/${item.Link}`}
+                    <Link
+                      href={`${process.env.NEXT_PUBLIC_ORIGIN}/projects/${item.Link}`}
                       target="_blank"
                       className="flex-items gap-2 text-blue-500 underline text-sm"
                     >
                       <ExternalLink size={16} />
                       {item.Link}
-                    </a>
+                    </Link>
                   )}
                   <h1 className="text-sm tracking-widest">
                     tags - {item.tags?.toLocaleString()}
