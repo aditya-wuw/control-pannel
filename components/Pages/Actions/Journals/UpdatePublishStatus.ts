@@ -18,8 +18,8 @@ export const UpdatePublishAction = async (
     };
   const supabase = await createClient();
   const { error } = await supabase
-    .from("personal_blogs_drafts")
-    .update({ isdraft: isDraft })
+    .from(isDraft ? "personal_blogs" : "personal_blogs_drafts")
+    .update({ isdraft: isDraft, updated: new Date().toISOString() })
     .eq("id", id);
 
   if (error)

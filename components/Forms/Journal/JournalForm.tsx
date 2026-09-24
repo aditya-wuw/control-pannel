@@ -29,7 +29,6 @@ export const InitialFormState: FormState = {
 
 export default function JournalForm({ buttonTitle, FormState, id }: props) {
   const [isOpen, setOpen] = useState(false);
-  const [enableUpload, setenableUpload] = useState(false);
   const [bannerPreview, setbannerPreview] = useState("");
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
@@ -44,12 +43,10 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
   );
 
   const handleCancel = () => {
-    setenableUpload(false);
     setOpen(false);
   };
 
   const handleResetBannerPreview = () => {
-    setenableUpload(true);
     setbannerPreview("");
     if (bannerInputRef.current) {
       bannerInputRef.current.value = "";

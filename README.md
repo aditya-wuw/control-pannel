@@ -30,7 +30,6 @@ Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can b
    It now be running on [localhost:3000](http://localhost:3000/).
 
 
-migrations for table schemas are not provided you'll have to create and update with your own table names and data
 ## Feedback and issues
 
 Please file feedback and issues over on [GitHub](https://github.com/aditya-wuw/control-pannel/issues).

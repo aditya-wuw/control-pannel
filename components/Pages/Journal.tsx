@@ -22,7 +22,6 @@ const filterOptions: Draftfilters[] = ["all", "Public", "Drafts"];
 const publishOptions = ["Public", "Drafts"];
 export default function Journal({ Journals }: JournalProps) {
   const router = useRouter();
-  const [ActionSuccess, setActionSuccess] = useState(false);
   const [JournalsState, setJournals] = useState(Journals);
   const [pending, startTransition] = useTransition();
   const [ShowJournalsbyFilter, setShowJournalsbyFilter] =
@@ -52,12 +51,6 @@ export default function Journal({ Journals }: JournalProps) {
       router.refresh();
     });
   };
-
-  useEffect(() => {
-    if (ActionSuccess) {
-      router.refresh();
-    }
-  }, [ActionSuccess]);
 
   const handleFilter = (target: Draftfilters) => {
     setShowJournalsbyFilter(target);
@@ -136,7 +129,8 @@ export default function Journal({ Journals }: JournalProps) {
                 <div className="flex gap-2 mt-4 text-sm">
                   {i.updated && (
                     <span className="opacity-70">
-                      updated {getFormatedDate(new Date(i.updated)) ?? ""}
+                      {i.isdraft ? "drafted" : "updated"}{" "}
+                      {getFormatedDate(new Date(i.updated)) ?? ""}
                       <span className="mx-1">•</span>
                     </span>
                   )}
