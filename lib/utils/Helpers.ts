@@ -29,3 +29,16 @@ export const LazyReload = (delay: number) => {
     window.location.reload();
   }, delay);
 };
+
+export const updateImageinForm = (
+  formdata: FormData,
+  Field: string,
+  value: string,
+): FormData => {
+  const field = formdata.get(Field);
+  if (field instanceof File && field.size === 0) {
+    formdata.delete(Field);
+    formdata.append(Field, value ?? "");
+  }
+  return formdata;
+};

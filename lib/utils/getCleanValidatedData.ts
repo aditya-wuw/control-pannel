@@ -50,10 +50,8 @@ export const getCleanJournalData = async (
   const ValidFormData = ValidatedForm.data;
   let constructBannerPath = "";
   constructBannerPath = ValidFormData.banner as string;
-  console.log(`validateded banner : ${ValidFormData.banner}`);
-
-  if (ValidFormData.banner instanceof File) {
-    console.log(`upload this block`);
+  console.log(constructBannerPath);
+  if (ValidFormData.banner instanceof File && ValidFormData.banner.size != 0) {
     const filename = buildUniqueName(ValidFormData.banner.name);
     constructBannerPath = "store/" + filename;
     const success = await uploadToPublicBucket(filename, ValidFormData.banner);
@@ -97,7 +95,8 @@ export const getCleanProjectsData = async (
   const ValidFormData = ValidatedForm.data;
   let constructImagePath = "";
   constructImagePath = ValidFormData.image as string;
-  if (ValidFormData.image instanceof File) {
+
+  if (ValidFormData.image instanceof File && ValidFormData.image.size != 0) {
     const filename = buildUniqueName(ValidFormData.image.name);
     constructImagePath = "store/" + filename;
     const success = await uploadToPublicBucket(filename, ValidFormData.image);

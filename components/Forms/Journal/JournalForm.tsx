@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { JournalSchemaError } from "@/types/SchemaErrorTypes";
 import Toast from "@/components/Toast";
 import { JournalUpdateAction } from "./JournalUpdateAction";
-import { LazyReload } from "@/lib/utils/Helpers";
+import { LazyReload, updateImageinForm } from "@/lib/utils/Helpers";
 
 interface props {
   buttonTitle?: string;
@@ -29,6 +29,7 @@ export const InitialFormState: FormState = {
 
 export default function JournalForm({ buttonTitle, FormState, id }: props) {
   const [isOpen, setOpen] = useState(false);
+  const [enableUpload, setenableUpload] = useState(false);
   const [bannerPreview, setbannerPreview] = useState("");
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,10 +44,12 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
   );
 
   const handleCancel = () => {
+    setenableUpload(false);
     setOpen(false);
   };
 
   const handleResetBannerPreview = () => {
+    setenableUpload(true);
     setbannerPreview("");
     if (bannerInputRef.current) {
       bannerInputRef.current.value = "";
@@ -57,6 +60,15 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
   const state = id ? UpdateState : SubmitState;
   //reset the form
   useEffect(() => {
+    const image = state.values?.banner as string;
+    if (image) {
+      const extractPath = image.split("store")[1];
+      if (extractPath) {
+        const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/assets${extractPath}`;
+        setbannerPreview(url);
+      }
+    }
+
     if (state.success) {
       toast.success(state.message as string);
       setbannerPreview("");
@@ -80,7 +92,14 @@ export default function JournalForm({ buttonTitle, FormState, id }: props) {
       <Card className="fixed inset-0  mx-auto my-auto xl:w-1/2 w-full h-[90%] p-5 pb-6 overflow-y-auto">
         <Toast />
         <form
-          action={id ? updateAction : formAction}
+          action={(formdata) => {
+            const fd = updateImageinForm(
+              formdata,
+              "banner",
+              state.values?.banner as string,
+            );
+            id ? updateAction(fd) : formAction(fd);
+          }}
           className="flex flex-col gap-5"
         >
           <h1 className="font-mono">{id ? "Update" : "Add"} journal details</h1>

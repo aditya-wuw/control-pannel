@@ -370,6 +370,15 @@ authorization_url_path = "/oauth/consent"
 # Allow dynamic client registration
 allow_dynamic_registration = false
 
+[auth.passkey]
+enabled = true
+
+[auth.webauthn]
+rp_display_name = "adi-pannel"
+rp_id = "localhost"
+rp_origins = ["http://localhost:3000"]
+
+
 [edge_runtime]
 enabled = true
 # Supported request policies: `oneshot`, `per_worker`.

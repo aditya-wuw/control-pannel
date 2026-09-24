@@ -4,7 +4,7 @@ CREATE TABLE "public"."analytics" (
   "id"              uuid                     NOT NULL DEFAULT gen_random_uuid(),
   "user_identifier" text,
   "country"         character varying(10),
-  "device"          text                     NOT NULL,
+  "device"          text                     NOT NULL, 
   "browser"         text,
   "path"            text                     NOT NULL,
   "details"         jsonb,

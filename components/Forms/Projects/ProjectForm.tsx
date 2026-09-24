@@ -17,7 +17,7 @@ import { ProjectFormState, ProjectFormAction } from "./ProjectFormAction";
 import { toast } from "sonner";
 import { ProjectSchemaError } from "@/types/SchemaErrorTypes";
 import { ProjectUpdateAction } from "./ProjectFormUpdateAction";
-import { LazyReload } from "@/lib/utils/Helpers";
+import { LazyReload, updateImageinForm } from "@/lib/utils/Helpers";
 
 interface props {
   buttonTitle?: string;
@@ -58,6 +58,16 @@ export default function ProjectForm({ buttonTitle, id, FormState }: props) {
 
   //reset the form
   useEffect(() => {
+
+    const image = state.values?.image as string;
+    if (image) {
+      const extractPath = image.split("store")[1];
+      if (extractPath) {
+        const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/assets${extractPath}`;
+        setbannerPreview(url);
+      }
+    }
+
     if (state.success) {
       toast.success(state.message as string);
       setbannerPreview("");
@@ -79,7 +89,14 @@ export default function ProjectForm({ buttonTitle, id, FormState }: props) {
     <div className="fixed z-100 inset-0 dark:bg-black/50 backdrop-blur-[2px] ">
       <Card className="fixed inset-0 mx-auto mt-20 w-1/2 overflow-y-auto h-8/9 p-5 pb-6">
         <form
-          action={id ? updateAction : formAction}
+          action={(formdata) => {
+            const fd = updateImageinForm(
+              formdata,
+              "image",
+              state.values?.image as string,
+            );
+            id ? updateAction(fd) : formAction(fd);
+          }}
           className="flex flex-col gap-5"
         >
           <h1 className="font-mono">{id ? "Update" : "Add"} project details</h1>
