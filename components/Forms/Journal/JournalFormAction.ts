@@ -29,7 +29,6 @@ export const JournalFormAction = async (
     return journal.state;
   }
 
-  // console.log(journal.data?.isdraft);
   const saved = await submitForm(
     journal.data?.isdraft ? "personal_blogs_drafts" : "personal_blogs",
     journal.data,

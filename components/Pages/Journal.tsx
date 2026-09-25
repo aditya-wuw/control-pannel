@@ -1,8 +1,8 @@
 "use client";
-import { JournalDraftsType, JournalType } from "@/types/database";
+import { JournalType } from "@/types/database";
 import { ExternalLink, Notebook, Trash } from "lucide-react";
 import { Button } from "../ui/button";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Card } from "../ui/card";
 import { toast } from "sonner";
 import { UpdatePublishAction } from "./Actions/Journals/UpdatePublishStatus";
@@ -116,8 +116,12 @@ export default function Journal({ Journals }: JournalProps) {
                 <div>
                   <h1>{i.title}</h1>
                   <Link
-                    href={`${process.env.NEXT_PUBLIC_ORIGIN}/journal/${i.id}`}
-                    target="_blank"
+                    href={
+                      i.isdraft
+                        ? `/home/preview?origin=journal&id=${i.id}`
+                        : `${process.env.NEXT_PUBLIC_ORIGIN}/journal/${i.id}`
+                    }
+                    target={i.isdraft ? "_self" : "_blank"}
                     className="mt-2 flex-items gap-2 text-blue-500 underline opacity-90 hover:opacity-100 text-sm"
                   >
                     <ExternalLink size={16} />

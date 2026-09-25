@@ -28,6 +28,7 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
   const [Filter, setFilter] = useState<Draftfilters>("Public");
 
   const handleDelete = (title: string, id: string, isdraft: boolean) => {
+    if (!isdraft) return;
     const yes = window.confirm(`Are you sure you want to delete, "${title}"`);
     if (!yes) return;
     startTranstion(async () => {
@@ -66,9 +67,7 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
       const success = await updateProjectsPublishAction(id, isdraft);
       if (!success) toast.error("Failed to update publish status");
       toast.success(`Publish status updated for ${id}`);
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      LazyReload(3000);
     });
   };
 
@@ -153,16 +152,21 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
               <div className="flex-1 font-medium">
                 <div className="flex flex-col gap-2">
                   <h1 className="font-bold">{item.title}</h1>
-                  {!item.isdraft && (
+                  {
                     <Link
-                      href={`${process.env.NEXT_PUBLIC_ORIGIN}/projects/${item.Link}`}
-                      target="_blank"
+                      href={
+                        item.isdraft
+                          ? `/home/preview?origin=project&id=${item.id}`
+                          : `${process.env.NEXT_PUBLIC_ORIGIN}/projects/${item.Link}`
+                      }
+
+                      target={item.isdraft ? "_self" : "_blank"}
                       className="flex-items gap-2 text-blue-500 underline text-sm"
                     >
                       <ExternalLink size={16} />
                       {item.Link}
                     </Link>
-                  )}
+                  }
                   <h1 className="text-sm tracking-widest">
                     tags - {item.tags?.toLocaleString()}
                   </h1>
@@ -207,20 +211,22 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
                     >
                       {item.isdraft ? "Publish" : "Save as Draft"}
                     </Button>
-                    <Button
-                      type="button"
-                      onClick={() =>
-                        handleDelete(
-                          item.title ?? "",
-                          item.id,
-                          item.isdraft ?? true,
-                        )
-                      }
-                      disabled={pending}
-                      className="bg-red-500 text-white hover:bg-red-800"
-                    >
-                      <Trash />
-                    </Button>
+                    {item.isdraft && (
+                      <Button
+                        type="button"
+                        onClick={() =>
+                          handleDelete(
+                            item.title ?? "",
+                            item.id,
+                            item.isdraft as boolean,
+                          )
+                        }
+                        disabled={pending}
+                        className="bg-red-500 text-white hover:bg-red-800"
+                      >
+                        <Trash />
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
