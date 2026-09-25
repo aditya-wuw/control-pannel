@@ -58,7 +58,6 @@ export default function ProjectForm({ buttonTitle, id, FormState }: props) {
 
   //reset the form
   useEffect(() => {
-
     const image = state.values?.image as string;
     if (image) {
       const extractPath = image.split("store")[1];
@@ -87,7 +86,7 @@ export default function ProjectForm({ buttonTitle, id, FormState }: props) {
     );
   return (
     <div className="fixed z-100 inset-0 dark:bg-black/50 backdrop-blur-[2px] ">
-      <Card className="fixed inset-0 mx-auto mt-20 w-1/2 overflow-y-auto h-8/9 p-5 pb-6">
+      <Card className="fixed inset-0 mx-auto mt-10 xl:w-1/2 w-[95%] overflow-y-auto h-[90%] p-5 pb-6">
         <form
           action={(formdata) => {
             const fd = updateImageinForm(

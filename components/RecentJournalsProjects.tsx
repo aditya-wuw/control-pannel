@@ -94,7 +94,7 @@ export default function RecentJournalsProjects({
       <div className="flex flex-col gap-4 mt-5">
         <h1 className="flex-items gap-2">
           <ClockFading size={16} />
-          Recent posts
+          Recently published
         </h1>
         <Card className="p-4 mt-2 w-full">
           <h1 className="opacity-80 text-md">Recent Journals</h1>

@@ -74,12 +74,12 @@ export default function Journal({ Journals }: JournalProps) {
 
   return (
     <div className="mt-5 px-4">
-      <div className="text-xl flex justify-between items-center">
+      <div className="text-xl xl:flex justify-between items-center">
         <h1 className="flex items-center gap-2">
           <Notebook size={20} />
           Journals
         </h1>
-        <div className="flex gap-2">
+        <div className="mt-4 xl:mt-0 flex gap-2">
           <Button className="w-fit">
             <select
               onChange={(e) =>
@@ -96,7 +96,7 @@ export default function Journal({ Journals }: JournalProps) {
           <JournalForm />
         </div>
       </div>
-      <h1 className="text-end text-sm opacity-50 mt-5">
+      <h1 className="xl:text-end text-sm opacity-50 mt-5">
         total {JournalsState.length} journals
       </h1>
       <div className="w-full mt-5 flex flex-col gap-5">
@@ -114,7 +114,7 @@ export default function Journal({ Journals }: JournalProps) {
             <Card className="w-full p-4" key={i.id}>
               <div className="flex justify-between gap-2">
                 <div>
-                  <h1>{i.title}</h1>
+                  <h1 className="text-md">{i.title}</h1>
                   <Link
                     href={
                       i.isdraft
@@ -129,13 +129,13 @@ export default function Journal({ Journals }: JournalProps) {
                   </Link>
                 </div>
               </div>
-              <div className="flex justify-between gap-2">
-                <div className="flex gap-2 mt-4 text-sm">
+              <div className="flex xl:flex-row flex-col xl:justify-between gap-2">
+                <div className="flex xl:flex-row flex-col xl:gap-2 mt-4 text-sm">
                   {i.updated && (
                     <span className="opacity-70">
                       {i.isdraft ? "drafted" : "updated"}{" "}
                       {getFormatedDate(new Date(i.updated)) ?? ""}
-                      <span className="mx-1">•</span>
+                      <span className="mx-1 xl:opacity-100 opacity-0">•</span>
                     </span>
                   )}
 

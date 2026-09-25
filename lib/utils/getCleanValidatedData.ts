@@ -50,7 +50,7 @@ export const getCleanJournalData = async (
   const ValidFormData = ValidatedForm.data;
   let constructBannerPath = "";
   constructBannerPath = ValidFormData.banner as string;
-  console.log(constructBannerPath);
+  // console.log(constructBannerPath);
   if (ValidFormData.banner instanceof File && ValidFormData.banner.size != 0) {
     const filename = buildUniqueName(ValidFormData.banner.name);
     constructBannerPath = "store/" + filename;

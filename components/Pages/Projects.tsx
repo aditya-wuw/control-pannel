@@ -107,10 +107,10 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
   );
 
   return (
-    <div className="mt-5 px-4">
-      <div className="text-xl flex justify-between items-center">
+    <div className="mt-5 px-6">
+      <div className="text-xl flex xl:flex-row flex-col justify-between xl:items-center">
         <h1 className="flex items-center gap-2">Projects</h1>
-        <div className="flex gap-2">
+        <div className="flex gap-2 mt-4 xl:mt-0">
           <Button className="w-fit">
             <select
               onChange={(e) =>
@@ -128,7 +128,7 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
         </div>
       </div>
       <div className="w-full mt-5 flex flex-col gap-5">
-        <h1 className="text-end text-sm opacity-50">
+        <h1 className="xl:text-end text-sm opacity-50">
           total {sortedItems.length} projects
         </h1>
         {sortedItems.length === 0 && (
@@ -171,8 +171,8 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
                     tags - {item.tags?.toLocaleString()}
                   </h1>
                 </div>
-                <div className="my-2 mt-4 flex justify-between gap-2">
-                  <div className="flex items-end">
+                <div className="my-2 mt-4 flex flex-col xl:flex-row justify-between gap-2">
+                  <div className="flex items-end ">
                     <h1>
                       created {getFormatedDate(new Date(item.created_at)) ?? ""}
                     </h1>

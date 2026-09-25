@@ -20,7 +20,7 @@ export default function ProtectedLayout({
           </div>
         </nav>
         <Toast />
-        <div className="relative flex-1 flex flex-col gap-5 max-w-5xl xl:w-5xl">
+        <div className="relative flex-1 flex flex-col gap-5 max-w-5xl xl:w-5xl w-sm">
           {children}
         </div>
       </div>

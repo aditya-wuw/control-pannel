@@ -49,8 +49,8 @@ export default function Contacts({ Contacts }: ContactsProps) {
   };
 
   return (
-    <div className="mt-5 px-4">
-      <div className="text-xl flex justify-between gap-2 items-center">
+    <div className="mt-5 px-6">
+      <div className="text-xl flex justify-between  gap-2 items-center">
         <h1 className="flex items-center gap-2">
           <Contact size={20} />
           Contacts
@@ -71,7 +71,7 @@ export default function Contacts({ Contacts }: ContactsProps) {
         total {ContactsState.length} contacts
       </h1>
       {Contacts.length === 0 || !Contacts ? (
-        <h1 className="flex justify-center mt-10 opacity-60">no contacts</h1>
+        <h1 className="flex justify-center mt-10 opacity-60 ">no contacts</h1>
       ) : (
         <div className="mt-5 flex flex-col gap-3">
           {ContactsState.sort((a, b) => {
