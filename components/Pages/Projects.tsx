@@ -88,8 +88,8 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
     draft: boolean,
   ) => {
     e.preventDefault();
-    if (draft) return;
-    if (!draggedId || draggedId === targetId) return;
+    if (draft) return setDraggedId(null);
+    if (!draggedId || draggedId === targetId) return setDraggedId(null);
     const updatedItems = calculateNewOrder(items, draggedId, targetId);
     setItems(updatedItems);
     const Updatestatus = await UpdateOrderIndex(updatedItems);
@@ -143,7 +143,7 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, item.id, item.isdraft ?? true)}
               className={`flex items-center gap-4 border p-3 rounded-xl shadow-sm transition-all
-                    ${draggedId === item.id ? "opacity-50 scale-95 border-blue-500" : "opacity-100"}
+                    ${draggedId === item.id ? "opacity-50 scale-95 border-blue-500" : "opacity-100"} overflow-hidden
                   `}
             >
               <div className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-700">
@@ -161,7 +161,7 @@ export default function Projects({ ProjectsData }: ProjectsProps) {
                       }
 
                       target={item.isdraft ? "_self" : "_blank"}
-                      className="flex-items gap-2 text-blue-500 underline text-sm"
+                      className="flex-items gap-2 text-blue-500 underline text-sm text-nowrap"
                     >
                       <ExternalLink size={16} />
                       {item.Link}
