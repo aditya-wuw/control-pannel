@@ -7,12 +7,14 @@ import { useEffect, useState } from "react";
 
 export default function RegisterPassKey() {
   const [hasPassKey, sethasPassKey] = useState(true);
+  const [registedCount, setregistedCount] = useState(0);
 
   const checkPasskey = async () => {
     const supabase = createClient();
     const { data: Passkey, error } = await supabase.auth.passkey.list();
-    // console.log(Passkey);
-    sethasPassKey(Passkey ? Passkey?.length > 0 : false);
+    console.log(Passkey);
+    setregistedCount(Passkey?.length ?? 0);
+    sethasPassKey(Passkey ? Passkey?.length > 1 : false);
     if (error) return toast.error(`Failed to get user data [${error.code}]`);
   };
 
@@ -33,5 +35,9 @@ export default function RegisterPassKey() {
         Device Registered
       </Button>
     );
-  return <Button onClick={handleRegister}>Register this device</Button>;
+  return (
+    <Button onClick={handleRegister}>
+      Register new passkey ({registedCount})
+    </Button>
+  );
 }
